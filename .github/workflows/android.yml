@@ -62,6 +62,136 @@ jobs:
             exit 0
           fi
 
+          # Repair common copy/paste Unicode punctuation or outer whitespace,
+          # but accept a repair ONLY if it unlocks the existing keystore.
+          candidate="$(printf '%s' "$REUZ_KEYSTORE_PASSWORD" | iconv -f UTF-8 -t ASCII//TRANSLIT 2>/dev/null | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//' || true)"
+          if [[ -n "$candidate" && "$candidate" != "$REUZ_KEYSTORE_PASSWORD" && "$candidate" != *          # SAME private key/certificate with a temporary ASCII CI password.
+          umask 077
+          pem="$(mktemp "$RUNNER_TEMP/reuz-signing.XXXXXXXX.pem")"
+          trap 'shred -u "$pem" 2>/dev/null || rm -f "$pem"' EXIT
+          converted="$RUNNER_TEMP/reuz-ci.p12"
+          if openssl pkcs12 -in "$REUZ_KEYSTORE" -passin env:REUZ_KEYSTORE_PASSWORD -nodes -out "$pem" >/dev/null 2>&1 ||
+             openssl pkcs12 -legacy -in "$REUZ_KEYSTORE" -passin env:REUZ_KEYSTORE_PASSWORD -nodes -out "$pem" >/dev/null 2>&1; then
+            ci_password="$(openssl rand -hex 32)"
+            echo "::add-mask::$ci_password"
+            export REUZ_CI_PASSWORD="$ci_password"
+            if openssl pkcs12 -export -in "$pem" -out "$converted" -name "${REUZ_KEY_ALIAS:-reuz}" -passout env:REUZ_CI_PASSWORD >/dev/null 2>&1 &&
+               keytool -list -storetype PKCS12 -keystore "$converted" -storepass:env REUZ_CI_PASSWORD -alias "${REUZ_KEY_ALIAS:-reuz}" >/dev/null 2>&1; then
+              printf 'REUZ_KEYSTORE=%s\nREUZ_KEYSTORE_PASSWORD=%s\n' "$converted" "$ci_password" >> "$GITHUB_ENV"
+            fi
+          fi
+
+      - name: Check signing password (no secret output)
+        shell: bash
+        run: |
+          if [[ -z "${REUZ_KEYSTORE:-}" ]]; then
+            exit 0
+          fi
+          if keytool -list -storetype PKCS12 -keystore "$REUZ_KEYSTORE" -storepass:env REUZ_KEYSTORE_PASSWORD >/dev/null 2>&1; then
+            echo "password OK"
+          else
+            echo "password wrong"
+            exit 1
+          fi
+
+      - name: Build release APK and Play Store bundle
+        working-directory: android
+        env:
+          REUZ_KEY_ALIAS: ${{ secrets.REUZ_KEY_ALIAS }}
+        run: gradle :app:assembleRelease :app:bundleRelease --stacktrace
+
+      - name: Upload installable APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Reuz-Android-release-apk
+          path: android/app/build/outputs/apk/release/app-release.apk
+          if-no-files-found: error
+
+      - name: Upload Play Store bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: Reuz-PlayStore-bundle
+          path: android/app/build/outputs/bundle/release/app-release.aab
+          if-no-files-found: error
+
+      - name: Publish stable download link
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cp android/app/build/outputs/apk/release/app-release.apk Reuz.apk
+          cp android/app/build/outputs/bundle/release/app-release.aab Reuz.aab
+          gh release delete latest --cleanup-tag --yes || true
+          gh release create latest Reuz.apk Reuz.aab --target "$GITHUB_SHA" --title "Reuz (latest)" \
+            --notes "Latest Reuz build from main. Reuz.apk installs on a phone; Reuz.aab is the Google Play upload bundle." --latest
+\n'* && "$candidate" != *          # SAME private key/certificate with a temporary ASCII CI password.
+          umask 077
+          pem="$(mktemp "$RUNNER_TEMP/reuz-signing.XXXXXXXX.pem")"
+          trap 'shred -u "$pem" 2>/dev/null || rm -f "$pem"' EXIT
+          converted="$RUNNER_TEMP/reuz-ci.p12"
+          if openssl pkcs12 -in "$REUZ_KEYSTORE" -passin env:REUZ_KEYSTORE_PASSWORD -nodes -out "$pem" >/dev/null 2>&1 ||
+             openssl pkcs12 -legacy -in "$REUZ_KEYSTORE" -passin env:REUZ_KEYSTORE_PASSWORD -nodes -out "$pem" >/dev/null 2>&1; then
+            ci_password="$(openssl rand -hex 32)"
+            echo "::add-mask::$ci_password"
+            export REUZ_CI_PASSWORD="$ci_password"
+            if openssl pkcs12 -export -in "$pem" -out "$converted" -name "${REUZ_KEY_ALIAS:-reuz}" -passout env:REUZ_CI_PASSWORD >/dev/null 2>&1 &&
+               keytool -list -storetype PKCS12 -keystore "$converted" -storepass:env REUZ_CI_PASSWORD -alias "${REUZ_KEY_ALIAS:-reuz}" >/dev/null 2>&1; then
+              printf 'REUZ_KEYSTORE=%s\nREUZ_KEYSTORE_PASSWORD=%s\n' "$converted" "$ci_password" >> "$GITHUB_ENV"
+            fi
+          fi
+
+      - name: Check signing password (no secret output)
+        shell: bash
+        run: |
+          if [[ -z "${REUZ_KEYSTORE:-}" ]]; then
+            exit 0
+          fi
+          if keytool -list -storetype PKCS12 -keystore "$REUZ_KEYSTORE" -storepass:env REUZ_KEYSTORE_PASSWORD >/dev/null 2>&1; then
+            echo "password OK"
+          else
+            echo "password wrong"
+            exit 1
+          fi
+
+      - name: Build release APK and Play Store bundle
+        working-directory: android
+        env:
+          REUZ_KEY_ALIAS: ${{ secrets.REUZ_KEY_ALIAS }}
+        run: gradle :app:assembleRelease :app:bundleRelease --stacktrace
+
+      - name: Upload installable APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Reuz-Android-release-apk
+          path: android/app/build/outputs/apk/release/app-release.apk
+          if-no-files-found: error
+
+      - name: Upload Play Store bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: Reuz-PlayStore-bundle
+          path: android/app/build/outputs/bundle/release/app-release.aab
+          if-no-files-found: error
+
+      - name: Publish stable download link
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cp android/app/build/outputs/apk/release/app-release.apk Reuz.apk
+          cp android/app/build/outputs/bundle/release/app-release.aab Reuz.aab
+          gh release delete latest --cleanup-tag --yes || true
+          gh release create latest Reuz.apk Reuz.aab --target "$GITHUB_SHA" --title "Reuz (latest)" \
+            --notes "Latest Reuz build from main. Reuz.apk installs on a phone; Reuz.aab is the Google Play upload bundle." --latest
+\r'* ]]; then
+            export REUZ_CANDIDATE_PASSWORD="$candidate"
+            if keytool -list -storetype PKCS12 -keystore "$REUZ_KEYSTORE" -storepass:env REUZ_CANDIDATE_PASSWORD >/dev/null 2>&1; then
+              echo "::add-mask::$candidate"
+              printf 'REUZ_KEYSTORE_PASSWORD=%s\n' "$candidate" >> "$GITHUB_ENV"
+              exit 0
+            fi
+          fi
+
           # Java's PKCS12 reader rejects some non-ASCII passwords. Rewrap the
           # SAME private key/certificate with a temporary ASCII CI password.
           umask 077
