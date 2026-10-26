@@ -1,12 +1,13 @@
 # Reuz
 
-A clock app with a direct MCP connection, so Claude can read and change the clock.
+A clock app that Claude can control directly over a private MCP connection.
 
 ## What it does
 
 - `/` shows a live clock page.
 - `/api/clock` returns the current time as JSON.
-- `/mcp/<token>` is the MCP endpoint Claude connects to. It needs the access token.
+- `/setup` creates your private connector URL. It works once, on the first visit.
+- `/mcp/<token>` is the private endpoint Claude uses. Without the token it refuses everything.
 
 Claude's tools:
 - `get_clock` reads the time, timezone and format.
@@ -15,22 +16,20 @@ Claude's tools:
 
 ## One-time setup
 
-1. In Cloudflare, open the **reuz** Worker (created on first deploy from this repo).
-2. Go to **Settings → Variables and secrets** and add a **Secret** named `MCP_TOKEN`.
-   Use a long random string, at least 32 characters. Do not put it in the repo.
-3. The connector URL is `https://<your-worker-host>/mcp/<MCP_TOKEN>`.
-   Add it in Claude under **Settings → Connectors → Add custom connector**.
+1. Open `https://<your-worker-host>/setup` once, right after the first deploy.
+2. Copy the connector URL it shows. It is displayed only once.
+3. In Claude, go to **Settings → Connectors → Add custom connector** and paste the URL.
 
-Until `MCP_TOKEN` is set, the MCP endpoint returns 503 and refuses all requests.
+Whoever opens `/setup` first gets the connector URL, so do it right after deploy.
+
+To replace the URL later, open `/setup/reset?token=<current token>`. Keep the URL somewhere safe, since the token is only shown once.
 
 ## Local development
 
 ```
 npm install
 npm test
-echo 'MCP_TOKEN=local-test-token-at-least-32-chars-long' > .dev.vars
 npx wrangler dev --local
-BASE=http://127.0.0.1:8787 MCP_TOKEN=local-test-token-at-least-32-chars-long scripts/smoke.sh
+# open http://127.0.0.1:8787/setup, then:
+BASE=http://127.0.0.1:8787 MCP_TOKEN=<token from /setup> scripts/smoke.sh
 ```
-
-`.dev.vars` is gitignored and must never be committed.
