@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "wrangler dev",
     "deploy": "wrangler deploy",
-    "test": "node --test test/clock.test.js test/page.test.js"
+    "test": "node --test test/clock.test.js test/page.test.js test/legal.test.js"
   },
   "dependencies": {
     "@modelcontextprotocol/server": "2.0.0",

@@ -15,4 +15,10 @@
     <string name="widget_analog_clear_label">Reuz Analog Clear</string>
     <string name="snooze">Snooze 10 min</string>
     <string name="dismiss">Dismiss</string>
+    <string name="emergency_dismiss">Switch off anyway</string>
+    <string name="dial_prompt">Dial this code on the rotary</string>
+    <string name="math_prompt">Solve it to switch off</string>
+    <string name="smart_channel">Smart wake</string>
+    <string name="smart_title">Smart wake is listening</string>
+    <string name="smart_text">Rings early at a light-sleep moment, or at %1$s at the latest</string>
 </resources>

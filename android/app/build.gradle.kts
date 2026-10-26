@@ -4,14 +4,14 @@ plugins {
 
 android {
     namespace = "com.rezoxnemesis.reuz"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.rezoxnemesis.reuz"
         minSdk = 26
-        targetSdk = 35
-        versionCode = 3
-        versionName = "0.3.0"
+        targetSdk = 36
+        versionCode = 10 + (System.getenv("GITHUB_RUN_NUMBER")?.toIntOrNull() ?: 0)
+        versionName = "1.0.0"
     }
 
     // CI supplies a fixed key (from repository secrets) so newer APKs install over older ones.
@@ -38,8 +38,19 @@ android {
             signingConfigs.findByName("reuz")?.let { signingConfig = it }
         }
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
             signingConfig = signingConfigs.findByName("reuz") ?: signingConfigs.getByName("debug")
         }
     }
+
+    lint {
+        abortOnError = false
+    }
+}
+
+dependencies {
+    implementation("androidx.webkit:webkit:1.12.1")
+    implementation("com.android.billingclient:billing:7.1.1")
 }

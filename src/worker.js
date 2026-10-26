@@ -4,6 +4,7 @@ import { createMcpHandler } from "agents/mcp/server";
 import { z } from "zod";
 import { DEFAULT_SETTINGS, FORMATS, formatClock, isValidTimezone, normalizeSettings } from "./clock.js";
 import { PAGE_HTML } from "./page.js";
+import { PRIVACY_HTML } from "./legal.js";
 
 // One Durable Object holds the clock settings and the access token, so both persist between requests.
 export class ClockState extends DurableObject {
@@ -119,6 +120,10 @@ export default {
 
     if (url.pathname === "/" || url.pathname === "/index.html") {
       return html(PAGE_HTML);
+    }
+
+    if (url.pathname === "/privacy") {
+      return html(PRIVACY_HTML);
     }
 
     if (url.pathname === "/api/clock") {

@@ -29,3 +29,10 @@ test("page template has nothing a JS template literal would mangle", () => {
 test("page talks to the native haptic bridge when present", () => {
   assert.match(PAGE_HTML, /native\.haptic/);
 });
+
+test("page has the Pro paywall, wake options and focus presets", () => {
+  assert.match(PAGE_HTML, /id="paySheet"/);
+  assert.match(PAGE_HTML, /id="segChallenge"/);
+  assert.match(PAGE_HTML, /id="focusPresets"/);
+  assert.match(PAGE_HTML, /native\.buy/);
+});
