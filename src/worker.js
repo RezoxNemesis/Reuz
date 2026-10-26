@@ -2,7 +2,7 @@ import { DurableObject } from "cloudflare:workers";
 import { McpServer } from "@modelcontextprotocol/server";
 import { createMcpHandler } from "agents/mcp/server";
 import { z } from "zod";
-import { DEFAULT_SETTINGS, formatClock, isValidTimezone, normalizeSettings } from "./clock.js";
+import { DEFAULT_SETTINGS, FORMATS, formatClock, isValidTimezone, normalizeSettings } from "./clock.js";
 import { PAGE_HTML } from "./page.js";
 
 // One Durable Object holds the clock settings and the access token, so both persist between requests.
@@ -123,6 +123,26 @@ export default {
 
     if (url.pathname === "/api/clock") {
       return json(formatClock(new Date(), await stub.getSettings()));
+    }
+
+    // Settings for the clock page. Only the timezone and format can change here; the MCP token is never returned.
+    if (url.pathname === "/api/settings") {
+      if (request.method === "GET") {
+        return json(await stub.getSettings());
+      }
+      if (request.method === "POST") {
+        let body;
+        try {
+          body = await request.json();
+        } catch {
+          return json({ error: "Send JSON with timezone and format." }, 400);
+        }
+        if (!isValidTimezone(body?.timezone) || !FORMATS.includes(body?.format)) {
+          return json({ error: "Unknown timezone or format." }, 400);
+        }
+        return json(await stub.saveSettings({ timezone: body.timezone, format: body.format }));
+      }
+      return json({ error: "Method not allowed" }, 405);
     }
 
     // First visit creates the token and shows the connector URL once. Later visits never reveal it.
