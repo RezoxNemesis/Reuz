@@ -46,6 +46,11 @@ if [[ -f "$encrypted_file" ]]; then
   decrypt_key
   echo 'Reusing the permanent Reuz signing certificate.'
 else
+  # If a signing key existed in repository history, never silently rotate.
+  if [[ "$self_test" == false ]] && [[ -n "$(git log --all -1 --format=%H -- "$encrypted_file")" ]]; then
+    echo '::error::The persistent signing key was removed from the repository. Refusing to create a different signing identity.'
+    exit 1
+  fi
   new_key=true
   echo 'Initializing a new permanent Reuz signing certificate.'
   keytool -genkeypair -noprompt \
