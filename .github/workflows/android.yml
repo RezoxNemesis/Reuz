@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build-apk:
@@ -31,8 +31,20 @@ jobs:
       - name: Install Android SDK components
         run: yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-35" "build-tools;35.0.0" >/dev/null
 
+      - name: Restore signing key (when the repository has one)
+        env:
+          KEY_B64: ${{ secrets.REUZ_KEYSTORE_B64 }}
+        run: |
+          if [ -n "$KEY_B64" ]; then
+            echo "$KEY_B64" | base64 -d > "$RUNNER_TEMP/reuz.jks"
+            echo "REUZ_KEYSTORE=$RUNNER_TEMP/reuz.jks" >> "$GITHUB_ENV"
+          fi
+
       - name: Build debug APK
         working-directory: android
+        env:
+          REUZ_KEYSTORE_PASSWORD: ${{ secrets.REUZ_KEYSTORE_PASSWORD }}
+          REUZ_KEY_ALIAS: ${{ secrets.REUZ_KEY_ALIAS }}
         run: gradle :app:assembleDebug --stacktrace
 
       - name: Upload installable APK
@@ -41,3 +53,13 @@ jobs:
           name: Reuz-Android-debug
           path: android/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
+
+      - name: Publish stable download link
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cp android/app/build/outputs/apk/debug/app-debug.apk Reuz.apk
+          gh release delete latest --cleanup-tag --yes || true
+          gh release create latest Reuz.apk --target "$GITHUB_SHA" --title "Reuz (latest)" \
+            --notes "Latest Reuz Android build from main. Install over the previous version." --latest

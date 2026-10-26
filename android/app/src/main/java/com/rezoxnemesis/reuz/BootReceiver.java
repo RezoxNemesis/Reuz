@@ -12,7 +12,7 @@ public class BootReceiver extends BroadcastReceiver {
         if (Intent.ACTION_BOOT_COMPLETED.equals(action)
                 || Intent.ACTION_MY_PACKAGE_REPLACED.equals(action)) {
             ReuzBridge.restore(context);
-            ClockWidget.updateAll(context);
+            ReuzWidget.updateAll(context);
         }
     }
 }

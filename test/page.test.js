@@ -13,3 +13,19 @@ test("page saves settings through the settings API", () => {
   assert.match(PAGE_HTML, /method: "POST"/);
   assert.match(PAGE_HTML, /id="sheet"/);
 });
+
+test("page has the glass capsule tab bar and the dial sheet", () => {
+  assert.match(PAGE_HTML, /id="capsule"/);
+  assert.match(PAGE_HTML, /id="dialSheet"/);
+  assert.match(PAGE_HTML, /id="rotary"/);
+});
+
+test("page template has nothing a JS template literal would mangle", () => {
+  assert.ok(!PAGE_HTML.includes("`"));
+  assert.ok(!PAGE_HTML.includes("${"));
+  assert.ok(!PAGE_HTML.includes("\\"));
+});
+
+test("page talks to the native haptic bridge when present", () => {
+  assert.match(PAGE_HTML, /native\.haptic/);
+});
