@@ -137,7 +137,25 @@ select option { background:#151923; color:#eef2fb; }
 .sheet h2 { margin:0 0 6px; font-size:18px; font-weight:620; text-align:center; }
 label { display:block; font-size:13px; color:var(--muted); margin:16px 0 6px; }
 .sheet select, .sheet input[type="text"] { width:100%; }
-.seg { display:grid; grid-template-columns:1fr 1fr; gap:6px; padding:4px; border-radius:15px; background:rgba(255,255,255,.06); }
+[hidden] { display:none !important; }
+.seg.c3 { grid-template-columns:repeat(3,1fr); }
+.seg.c4 { grid-template-columns:repeat(4,1fr); }
+.pro { font-size:10px; font-weight:700; letter-spacing:.12em; color:#1a1004; background:linear-gradient(120deg,var(--brass),var(--brass2)); border-radius:99px; padding:3px 8px; flex:none; }
+.wake { text-align:left; margin-top:6px; }
+.wake .seg { margin:2px 0 8px; }
+.perks { list-style:none; margin:10px 0 14px; padding:0; display:grid; gap:10px; }
+.perks li { display:flex; gap:12px; align-items:flex-start; font-size:14px; color:var(--ink); }
+.perks li b { display:block; font-weight:620; }
+.perks li small { color:var(--muted); font-size:12.5px; }
+.perks .dot { width:28px; height:28px; border-radius:9px; flex:none; display:grid; place-items:center; background:rgba(255,196,107,.16); color:var(--brass); font-size:14px; }
+.plans { display:grid; gap:8px; margin-bottom:10px; }
+.plan { font:inherit; color:var(--ink); text-align:left; display:flex; justify-content:space-between; align-items:center; gap:10px; padding:14px 16px; border-radius:16px; border:1px solid var(--glass-border); background:rgba(255,255,255,.07); cursor:pointer; }
+.plan.best { border-color:rgba(255,196,107,.7); background:rgba(255,196,107,.12); }
+.plan small { color:var(--muted); display:block; font-size:12px; }
+.plan b { font-weight:650; }
+.fine { display:block; color:var(--muted); font-size:11.5px; line-height:1.45; margin-top:10px; text-align:center; }
+.fine a { color:var(--brass); }
+.seg { grid-template-columns:1fr 1fr; gap:6px; padding:4px; border-radius:15px; background:rgba(255,255,255,.06); }
 .seg button { font:inherit; color:var(--muted); background:transparent; border:0; border-radius:11px; padding:10px; cursor:pointer; transition:background .3s var(--ease), color .3s; }
 .seg button[aria-pressed="true"] { background:rgba(255,255,255,.16); color:var(--ink); box-shadow:0 4px 14px rgba(0,0,0,.25); }
 .actions { display:flex; gap:10px; margin-top:18px; }
@@ -221,6 +239,7 @@ label { display:block; font-size:13px; color:var(--muted); margin:16px 0 6px; }
         <div class="edit-hint">Tap the time to dial it in</div>
         <button class="timebtn" id="timerDraft" aria-label="Set timer duration"><div class="bigtime" id="timerNew">05:00</div></button>
         <div class="chips" id="timerPresets"></div>
+        <div class="chips" id="focusPresets" hidden aria-label="Focus sessions"></div>
         <div class="form" style="margin-top:16px">
           <input id="timerLabel" type="text" placeholder="Label (optional)" maxlength="40">
           <button class="btn tap" id="timerAdd">Start timer</button>
@@ -247,6 +266,23 @@ label { display:block; font-size:13px; color:var(--muted); margin:16px 0 6px; }
         <div class="edit-hint">Tap the time to dial it in</div>
         <button class="timebtn" id="alarmDraft" aria-label="Set alarm time"><div class="bigtime" id="alarmNew">07:00</div></button>
         <div class="chips days" id="dayChips" role="group" aria-label="Repeat days"></div>
+        <div class="wake" id="wakeBox" hidden>
+          <div class="edit-hint" style="margin-top:16px">Wake-up</div>
+          <div class="setrow"><div>Dismiss challenge<small>Dial a code or solve a sum to switch off</small></div><span class="pro">PRO</span></div>
+          <div class="seg c3" id="segChallenge" role="group" aria-label="Dismiss challenge">
+            <button type="button" data-ch="off" aria-pressed="true">Off</button>
+            <button type="button" data-ch="dial" aria-pressed="false">Dial</button>
+            <button type="button" data-ch="math" aria-pressed="false">Math</button>
+          </div>
+          <div class="setrow"><div>Smart window<small>Ring early, at a light-sleep moment</small></div><span class="pro">PRO</span></div>
+          <div class="seg c4" id="segWindow" role="group" aria-label="Smart wake window">
+            <button type="button" data-win="0" aria-pressed="true">Off</button>
+            <button type="button" data-win="10" aria-pressed="false">10 min</button>
+            <button type="button" data-win="20" aria-pressed="false">20 min</button>
+            <button type="button" data-win="30" aria-pressed="false">30 min</button>
+          </div>
+          <div class="setrow"><div>Gentle volume<small>Start soft and rise over a minute</small></div><button class="toggle" id="optGentle" role="switch" aria-checked="true" aria-label="Gentle volume"></button></div>
+        </div>
         <div class="form" style="margin-top:16px">
           <input id="alarmLabel" type="text" placeholder="Label (optional)" maxlength="40">
           <button class="btn tap" id="alarmAdd">Add alarm</button>
@@ -282,11 +318,30 @@ label { display:block; font-size:13px; color:var(--muted); margin:16px 0 6px; }
   </div>
   <div class="setrow" style="margin-top:14px"><div>Tick sounds<small>The clockwork click while you dial</small></div><button class="toggle" id="optSound" role="switch" aria-checked="true" aria-label="Tick sounds"></button></div>
   <div class="setrow"><div>Haptics<small>A little buzz with every tick</small></div><button class="toggle" id="optHaptics" role="switch" aria-checked="true" aria-label="Haptics"></button></div>
+  <div class="setrow" id="proRow" hidden><div>Reuz Pro<small id="proState">Dismiss challenges, smart wake and focus timers</small></div><button class="btn ghost" type="button" id="proOpen" style="padding:9px 14px">Upgrade</button></div>
+  <div class="setrow"><div>Privacy policy<small>What Reuz stores and why</small></div><button class="btn ghost" type="button" id="privacyOpen" style="padding:9px 14px">Read</button></div>
   <div class="actions">
     <button class="btn ghost" type="button" id="cancel">Cancel</button>
     <button class="btn" type="button" id="save">Save</button>
   </div>
   <div class="status" id="status" role="status"></div>
+</section>
+
+<section class="sheet glass" id="paySheet" role="dialog" aria-modal="true" aria-labelledby="payTitle">
+  <div class="grab"></div>
+  <h2 id="payTitle">Reuz Pro</h2>
+  <ul class="perks">
+    <li><span class="dot">&#9742;</span><span><b>Dismiss challenges</b><small>Dial a code on the rotary or solve a sum. No more snoozing through it.</small></span></li>
+    <li><span class="dot">&#9790;</span><span><b>Smart wake window</b><small>Reuz rings early, when your phone feels you stirring, inside a window you choose.</small></span></li>
+    <li><span class="dot">&#9201;</span><span><b>Focus timers</b><small>Pomodoro, Deep and Flow sessions that start their break by themselves.</small></span></li>
+  </ul>
+  <div class="plans" id="plans"></div>
+  <div class="actions">
+    <button class="btn ghost" type="button" id="payRestore">Restore purchase</button>
+    <button class="btn ghost" type="button" id="payClose">Not now</button>
+  </div>
+  <div class="status" id="payMsg" role="status"></div>
+  <small class="fine">Subscriptions renew automatically until you cancel them in Google Play. Manage or cancel any time in Play Store &gt; Payments &amp; subscriptions. Clocks, alarms, timers, widgets and gentle volume stay free.</small>
 </section>
 
 <section class="sheet glass" id="dialSheet" role="dialog" aria-modal="true" aria-labelledby="dialTitle">
@@ -361,6 +416,9 @@ label { display:block; font-size:13px; color:var(--muted); margin:16px 0 6px; }
   var alertOpen = false;
   var fmtParts = null;
   var native = (window.ReuzNative && typeof window.ReuzNative.sync === "function") ? window.ReuzNative : null;
+  var API = native ? "https://reuz.prakasharuntandon634.workers.dev" : ""; // used for the privacy page link only
+  var pro = false;
+  if (native && native.isPro) { try { pro = !!native.isPro(); } catch (e) {} }
   var reduced = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
 
   function $(id) { return document.getElementById(id); }
@@ -377,7 +435,7 @@ label { display:block; font-size:13px; color:var(--muted); margin:16px 0 6px; }
   function defaults() {
     return { worldZones: ["Europe/London", "America/New_York", "Asia/Tokyo"], timers: [], alarms: [],
       sw: { running: false, startedAt: 0, baseMs: 0, laps: [] },
-      ui: { face: "digital", sound: true, haptics: true, draftTimerMs: 300000, draftAlarm: { h: 7, m: 0 }, draftDays: ALL } };
+      ui: { face: "digital", sound: true, haptics: true, draftTimerMs: 300000, draftAlarm: { h: 7, m: 0 }, draftDays: ALL, draftWake: { challenge: "off", window: 0, gentle: true } } };
   }
   function load() {
     var base = defaults();
@@ -392,6 +450,7 @@ label { display:block; font-size:13px; color:var(--muted); margin:16px 0 6px; }
       if (d.ui && typeof d.ui === "object") {
         base.ui = Object.assign(base.ui, d.ui);
         if (!base.ui.draftAlarm || typeof base.ui.draftAlarm.h !== "number") base.ui.draftAlarm = { h: 7, m: 0 };
+        if (!base.ui.draftWake || typeof base.ui.draftWake !== "object") base.ui.draftWake = { challenge: "off", window: 0, gentle: true };
       }
     } catch (e) { return defaults(); }
     return base;
@@ -411,7 +470,8 @@ label { display:block; font-size:13px; color:var(--muted); margin:16px 0 6px; }
   function scheduleList() {
     var out = [];
     data.alarms.forEach(function (a) {
-      if (a.enabled) out.push({ id: "alarm-" + a.id, hour: a.hour, minute: a.minute, days: a.days, title: "Rise and shine", body: a.label || hm(a.hour, a.minute) });
+      if (a.enabled) out.push({ id: "alarm-" + a.id, hour: a.hour, minute: a.minute, days: a.days, title: "Rise and shine", body: a.label || hm(a.hour, a.minute),
+        challenge: pro ? (a.challenge || "off") : "off", window: pro ? (a.window || 0) : 0, gentle: a.gentle !== false });
     });
     data.timers.forEach(function (t) {
       if (t.state === "running") out.push({ id: "timer-" + t.id, at: t.endAt, title: "Ding! Time is up", body: t.label });
@@ -714,7 +774,16 @@ label { display:block; font-size:13px; color:var(--muted); margin:16px 0 6px; }
     rebuildFmt(); renderClock(); renderWorld(); renderDraftAlarm(); renderAlarms();
   }
   function loadHome() {
-    fetch("/api/settings", { cache: "no-store" })
+    if (native) {
+      // In the app the home zone lives on the phone, so it works offline and is never shared.
+      var saved = null;
+      try { saved = JSON.parse(native.getHome()); } catch (e) {}
+      var device = "UTC";
+      try { device = Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC"; } catch (e) {}
+      applyHome(saved && validZone(saved.timezone) ? saved : { timezone: validZone(device) ? device : "UTC", format: home.format });
+      return;
+    }
+    fetch(API + "/api/settings", { cache: "no-store" })
       .then(function (r) { if (!r.ok) throw new Error(); return r.json(); })
       .then(applyHome)
       .catch(function () { $("zone").textContent = "Offline · " + home.timezone; });
@@ -732,8 +801,9 @@ label { display:block; font-size:13px; color:var(--muted); margin:16px 0 6px; }
   function saveHome() {
     var tz = tzCustom.value.trim() || tzSel.value;
     if (!validZone(tz)) { statusEl.textContent = "That timezone isn't recognised."; statusEl.className = "status err"; return; }
+    if (native) { applyHome({ timezone: tz, format: draftFormat }); statusEl.textContent = "Saved"; setTimeout(closeSheet, 500); return; }
     $("save").disabled = true; statusEl.textContent = "Saving…"; statusEl.className = "status";
-    fetch("/api/settings", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ timezone: tz, format: draftFormat }) })
+    fetch(API + "/api/settings", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ timezone: tz, format: draftFormat }) })
       .then(function (r) { if (!r.ok) throw new Error(); return r.json(); })
       .then(function (s) { applyHome(s); statusEl.textContent = "Saved"; setTimeout(closeSheet, 500); })
       .catch(function () { statusEl.textContent = "Couldn't save. Check your connection."; statusEl.className = "status err"; })
@@ -804,7 +874,11 @@ label { display:block; font-size:13px; color:var(--muted); margin:16px 0 6px; }
     c.onclick = function () { data.ui.draftTimerMs = m * 60000; tick(1); save(); renderDraftTimer(); };
     $("timerPresets").appendChild(c);
   });
-  function timerRemaining(t) { return t.state === "running" ? Math.max(0, t.endAt - Date.now()) : t.remainingMs; }
+  function timerRemaining(t) {
+    if (t.state !== "running") return t.remainingMs;
+    if (t.startAt && Date.now() < t.startAt) return t.durationMs;
+    return Math.max(0, t.endAt - Date.now());
+  }
   var CIRC = 2 * Math.PI * 19;
   function renderTimers() {
     var list = $("timerList");
@@ -813,7 +887,7 @@ label { display:block; font-size:13px; color:var(--muted); margin:16px 0 6px; }
     data.timers.forEach(function (t) {
       var running = t.state === "running", label = t.state === "paused" ? "Resume" : (running ? "Pause" : "Start");
       html += '<div class="row wrap"><svg class="ring" viewBox="0 0 46 46"><circle class="track" cx="23" cy="23" r="19"/><circle class="prog" data-ring="' + t.id + '" cx="23" cy="23" r="19" stroke-dasharray="' + CIRC.toFixed(2) + '" stroke-dashoffset="0"/></svg>'
-        + '<div class="main"><div class="title">' + esc(t.label) + '</div><div class="meta">' + fmtHMS(t.durationMs) + " · " + esc(t.state) + '</div></div>'
+        + '<div class="main"><div class="title">' + esc(t.label) + '</div><div class="meta">' + fmtHMS(t.durationMs) + " · " + (t.startAt && Date.now() < t.startAt && running ? "starts after focus" : esc(t.state)) + '</div></div>'
         + '<div class="right" data-remain="' + t.id + '"></div>'
         + '<div class="acts"><button class="iconbtn tap" data-tstart="' + t.id + '">' + label + '</button>'
         + '<button class="iconbtn tap" data-treset="' + t.id + '">Reset</button>'
@@ -854,7 +928,7 @@ label { display:block; font-size:13px; color:var(--muted); margin:16px 0 6px; }
     var t = data.timers.filter(function (x) { return x.id === id; })[0];
     if (!t) return;
     if (s) {
-      if (t.state === "running") { t.remainingMs = Math.max(0, t.endAt - Date.now()); t.state = "paused"; t.endAt = 0; }
+      if (t.state === "running") { t.remainingMs = Math.min(t.durationMs, Math.max(0, t.endAt - Date.now())); t.state = "paused"; t.endAt = 0; t.startAt = 0; }
       else { if (t.remainingMs <= 0) t.remainingMs = t.durationMs; t.endAt = Date.now() + t.remainingMs; t.state = "running"; requestNotify(); }
     } else if (r) { t.state = "idle"; t.endAt = 0; t.remainingMs = t.durationMs; }
     else { data.timers = data.timers.filter(function (x) { return x.id !== id; }); }
@@ -918,7 +992,7 @@ label { display:block; font-size:13px; color:var(--muted); margin:16px 0 6px; }
     var now = new Date(), html = "";
     data.alarms.slice().sort(function (a, b) { return (a.hour * 60 + a.minute) - (b.hour * 60 + b.minute); }).forEach(function (a) {
       var o = a.enabled ? nextOccurrence(a.hour, a.minute, a.days, now) : null;
-      html += '<div class="row' + (a.enabled ? "" : " dim") + '"><div class="main"><div class="title">' + esc(a.label || "Alarm") + '</div><div class="meta">' + esc(daysText(a.days)) + '</div><div class="meta">' + (o ? "Rings " + inText(o - now) : "Off") + '</div></div>'
+      html += '<div class="row' + (a.enabled ? "" : " dim") + '"><div class="main"><div class="title">' + esc(a.label || "Alarm") + '</div><div class="meta">' + esc(daysText(a.days)) + '</div><div class="meta">' + (o ? "Rings " + inText(o - now) : "Off") + '</div>' + (wakeText(a) ? '<div class="meta">' + esc(wakeText(a)) + '</div>' : "") + '</div>'
         + '<button class="timelink" data-aedit="' + a.id + '" aria-label="Edit alarm time">' + alarmClockText(a) + '</button>'
         + '<button class="toggle" role="switch" aria-checked="' + a.enabled + '" data-atog="' + a.id + '" aria-label="Enable alarm"></button>'
         + '<button class="iconbtn danger" data-adel="' + a.id + '" aria-label="Delete alarm">✕</button></div>';
@@ -932,7 +1006,8 @@ label { display:block; font-size:13px; color:var(--muted); margin:16px 0 6px; }
   };
   $("alarmAdd").onclick = function () {
     var d = data.ui.draftAlarm;
-    data.alarms.push({ id: uid(), hour: d.h, minute: d.m, label: $("alarmLabel").value.trim(), enabled: true, days: data.ui.draftDays, lastFired: "" });
+    data.alarms.push({ id: uid(), hour: d.h, minute: d.m, label: $("alarmLabel").value.trim(), enabled: true, days: data.ui.draftDays, lastFired: "",
+      challenge: data.ui.draftWake.challenge, window: data.ui.draftWake.window, gentle: data.ui.draftWake.gentle });
     $("alarmLabel").value = ""; requestNotify(); tick(2);
     var o = nextOccurrence(d.h, d.m, data.ui.draftDays, new Date());
     toast(o ? "Alarm set. Rings " + inText(o - new Date()) : "Alarm set.");
@@ -1134,6 +1209,95 @@ label { display:block; font-size:13px; color:var(--muted); margin:16px 0 6px; }
   };
   $("dialClear").onclick = function () { D.fresh = false; fromDigits(zeros()); tick(1); renderReadout(); };
 
+  // ---------- Reuz Pro: wake-up options, focus sessions and the paywall
+  var paySheet = $("paySheet"), plansBox = $("plans"), payMsg = $("payMsg");
+  var FOCUS = [["Pomodoro", 25, 5], ["Deep", 50, 10], ["Flow", 90, 15]];
+  function wakeText(a) {
+    if (!native) return "";
+    var bits = [];
+    if (a.challenge === "dial") bits.push("Dial challenge"); else if (a.challenge === "math") bits.push("Math challenge");
+    if (a.window) bits.push("Smart " + a.window + " min");
+    return bits.join(" · ");
+  }
+  function setSeg(id, attr, value) {
+    document.querySelectorAll("#" + id + " [" + attr + "]").forEach(function (b) { b.setAttribute("aria-pressed", String(b.getAttribute(attr) === String(value))); });
+  }
+  function renderWake() {
+    var w = data.ui.draftWake;
+    setSeg("segChallenge", "data-ch", w.challenge); setSeg("segWindow", "data-win", w.window); setToggle("optGentle", w.gentle);
+  }
+  function renderPro() {
+    $("wakeBox").hidden = !native;
+    $("proRow").hidden = !native;
+    $("focusPresets").hidden = !native;
+    $("proState").textContent = pro ? "Active. Thank you!" : "Dismiss challenges, smart wake and focus timers";
+    $("proOpen").textContent = pro ? "Manage" : "Upgrade";
+    if (!pro && (data.ui.draftWake.challenge !== "off" || data.ui.draftWake.window)) { data.ui.draftWake.challenge = "off"; data.ui.draftWake.window = 0; }
+    renderWake();
+  }
+  function renderPlans(list) {
+    var html = "";
+    list.forEach(function (p) {
+      html += '<button type="button" class="plan tap' + (p.sku === "reuz_pro_yearly" ? " best" : "") + '" data-sku="' + esc(p.sku) + '"><span><b>' + esc(p.title) + '</b><small>' + esc(p.note) + '</small></span><b>' + esc(p.price) + '</b></button>';
+    });
+    plansBox.innerHTML = html || '<div class="empty">Prices are loading…</div>';
+  }
+  function loadPlans() {
+    var list = [];
+    try { list = JSON.parse(native.products()); } catch (e) {}
+    renderPlans(list);
+  }
+  function openPay() {
+    if (!native) return;
+    payMsg.textContent = ""; payMsg.className = "status";
+    loadPlans(); openSheet(paySheet);
+    setTimeout(function () { if (paySheet.classList.contains("open")) loadPlans(); }, 1500);
+  }
+  function needPro() { if (pro) return true; openPay(); return false; }
+  window.reuzPro = function (on) {
+    pro = !!on; renderPro(); syncNative();
+    if (pro) { payMsg.textContent = "Reuz Pro is on. Enjoy!"; setTimeout(function () { if (openLayer === paySheet) closeSheet(); }, 900); }
+  };
+  window.reuzBilling = function (msg) { payMsg.textContent = String(msg || ""); payMsg.className = "status"; loadPlans(); };
+  plansBox.onclick = function (e) {
+    var b = e.target.closest("[data-sku]");
+    if (!b || !native) return;
+    payMsg.textContent = "Opening Google Play…";
+    try { native.buy(b.getAttribute("data-sku")); } catch (x) { payMsg.textContent = "Billing isn't available right now."; }
+  };
+  $("payRestore").onclick = function () { payMsg.textContent = "Checking Google Play…"; try { native.restore(); } catch (x) {} };
+  $("payClose").onclick = closeSheet;
+  $("proOpen").onclick = function () {
+    if (pro) { try { native.manageSubscriptions(); } catch (x) {} } else openPay();
+  };
+  $("privacyOpen").onclick = function () { if (native) location.href = API + "/privacy"; else window.open("/privacy", "_blank"); };
+  $("segChallenge").onclick = function (e) {
+    var b = e.target.closest("[data-ch]"); if (!b) return;
+    var v = b.getAttribute("data-ch");
+    if (v !== "off" && !needPro()) return;
+    data.ui.draftWake.challenge = v; tick(1); save(); renderWake();
+  };
+  $("segWindow").onclick = function (e) {
+    var b = e.target.closest("[data-win]"); if (!b) return;
+    var v = Number(b.getAttribute("data-win"));
+    if (v && !needPro()) return;
+    data.ui.draftWake.window = v; tick(1); save(); renderWake();
+  };
+  $("optGentle").onclick = function () { data.ui.draftWake.gentle = !data.ui.draftWake.gentle; tick(1); save(); renderWake(); };
+  FOCUS.forEach(function (f) {
+    var c = document.createElement("button");
+    c.className = "chip tap"; c.textContent = f[0] + " " + f[1] + " / " + f[2];
+    c.onclick = function () {
+      if (!needPro()) return;
+      var now = Date.now(), fm = f[1] * 60000, bm = f[2] * 60000;
+      var focus = { id: uid(), label: f[0] + " focus", durationMs: fm, remainingMs: fm, endAt: now + fm, state: "running" };
+      var rest = { id: uid(), label: "Break", durationMs: bm, remainingMs: bm, startAt: now + fm, endAt: now + fm + bm, state: "running" };
+      data.timers.unshift(rest); data.timers.unshift(focus);
+      requestNotify(); tick(2); toast(f[0] + " started. Break follows by itself."); save(); renderTimers();
+    };
+    $("focusPresets").appendChild(c);
+  });
+
   // ---------- Background checks (browser mode alerts; in the Android app the phone rings instead)
   function checkAlarms(now) {
     if (native) return;
@@ -1167,7 +1331,7 @@ label { display:block; font-size:13px; color:var(--muted); margin:16px 0 6px; }
   }, 250);
   document.addEventListener("visibilitychange", function () { if (!document.hidden) { renderAll(); syncNative(); if (data.ui.face === "analog") animLoop(); } });
 
-  rebuildFmt(); buildRotary(); renderDayChips(); renderAll(); applyFace(false);
+  rebuildFmt(); buildRotary(); renderDayChips(); renderAll(); renderPro(); applyFace(false);
   document.querySelectorAll(".panel").forEach(function (p) { var pi = TABS.indexOf(p.id.slice(2)); p.style.setProperty("--dx", (pi === 0 ? 0 : 34) + "px"); });
   setTimeout(function () { placeCapsule("clock", false); }, 30);
   loadHome(); syncNative();
