@@ -88,7 +88,11 @@ jobs:
             if openssl pkcs12 -export -in "$pem" -out "$converted" -name "${REUZ_KEY_ALIAS:-reuz}" -passout env:REUZ_CI_PASSWORD >/dev/null 2>&1 &&
                keytool -list -storetype PKCS12 -keystore "$converted" -storepass:env REUZ_CI_PASSWORD -alias "${REUZ_KEY_ALIAS:-reuz}" >/dev/null 2>&1; then
               printf 'REUZ_KEYSTORE=%s\nREUZ_KEYSTORE_PASSWORD=%s\n' "$converted" "$ci_password" >> "$GITHUB_ENV"
+            else
+              echo "::error::PKCS12 decrypted, but Java could not validate the converted store/alias."
             fi
+          else
+            echo "::error::Original PKCS12 cannot be decrypted using the configured secret."
           fi
 
       - name: Check signing password (no secret output)
