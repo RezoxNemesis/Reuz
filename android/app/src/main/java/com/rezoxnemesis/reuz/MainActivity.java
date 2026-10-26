@@ -29,6 +29,9 @@ public class MainActivity extends Activity {
         settings.setJavaScriptEnabled(true);
         settings.setDomStorageEnabled(true);
 
+        ReuzBridge.ensureChannel(this);
+        web.addJavascriptInterface(new ReuzBridge(this), "ReuzNative");
+
         web.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Reuz</string>
+    <string name="channel_name">Alarms and timers</string>
+    <string name="channel_description">Alerts for the alarms and timers you set in Reuz</string>
+    <string name="widget_description">A clock in your Reuz home timezone</string>
+</resources>
