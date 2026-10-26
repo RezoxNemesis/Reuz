@@ -4,4 +4,15 @@
     <string name="channel_name">Alarms and timers</string>
     <string name="channel_description">Alerts for the alarms and timers you set in Reuz</string>
     <string name="widget_description">A clock in your Reuz home timezone</string>
+    <string name="widget_clear_description">Transparent digital clock</string>
+    <string name="widget_flip_description">Flip-card clock</string>
+    <string name="widget_analog_description">Analog clock on glass</string>
+    <string name="widget_analog_clear_description">Transparent analog clock</string>
+    <string name="widget_clock_label">Reuz Glass</string>
+    <string name="widget_clear_label">Reuz Clear</string>
+    <string name="widget_flip_label">Reuz Flip</string>
+    <string name="widget_analog_label">Reuz Analog</string>
+    <string name="widget_analog_clear_label">Reuz Analog Clear</string>
+    <string name="snooze">Snooze 10 min</string>
+    <string name="dismiss">Dismiss</string>
 </resources>
