@@ -3,14 +3,18 @@ name: Reuz Android APK
 on:
   push:
     branches: [ main ]
-    paths: [ 'android/**', 'src/page.js', 'scripts/export-page.mjs', '.github/workflows/android.yml' ]
+    paths: [ 'android/**', 'src/page.js', 'scripts/export-page.mjs', '.github/workflows/android.yml', 'scripts/reuz-release-signing.sh' ]
   pull_request:
     branches: [ main ]
-    paths: [ 'android/**', 'src/page.js', 'scripts/export-page.mjs', '.github/workflows/android.yml' ]
+    paths: [ 'android/**', 'src/page.js', 'scripts/export-page.mjs', '.github/workflows/android.yml', 'scripts/reuz-release-signing.sh' ]
   workflow_dispatch:
 
 permissions:
   contents: write
+
+concurrency:
+  group: reuz-android-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
   build-apk:
@@ -38,20 +42,20 @@ jobs:
       - name: Install Android SDK components
         run: yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-36" "build-tools;36.0.0" >/dev/null
 
-      - name: Restore signing key (when the repository has one)
+      - name: Self-test permanent signing key (PR only)
+        if: github.event_name == 'pull_request'
+        run: bash scripts/reuz-release-signing.sh --self-test
+
+      - name: Prepare permanent release signing key
+        if: github.event_name != 'pull_request'
         env:
-          KEY_B64: ${{ secrets.REUZ_KEYSTORE_B64 }}
-        run: |
-          if [ -n "$KEY_B64" ]; then
-            echo "$KEY_B64" | base64 -d > "$RUNNER_TEMP/reuz.jks"
-            echo "REUZ_KEYSTORE=$RUNNER_TEMP/reuz.jks" >> "$GITHUB_ENV"
-          fi
+          # The existing secret now protects the encrypted new key. Its old
+          # value does not have to unlock the old PKCS12 keystore.
+          REUZ_SIGNING_ENCRYPTION_SECRET: ${{ secrets.REUZ_KEYSTORE_PASSWORD }}
+        run: bash scripts/reuz-release-signing.sh
 
       - name: Build release APK and Play Store bundle
         working-directory: android
-        env:
-          REUZ_KEYSTORE_PASSWORD: ${{ secrets.REUZ_KEYSTORE_PASSWORD }}
-          REUZ_KEY_ALIAS: ${{ secrets.REUZ_KEY_ALIAS }}
         run: gradle :app:assembleRelease :app:bundleRelease --stacktrace
 
       - name: Upload installable APK
@@ -78,3 +82,11 @@ jobs:
           gh release delete latest --cleanup-tag --yes || true
           gh release create latest Reuz.apk Reuz.aab --target "$GITHUB_SHA" --title "Reuz (latest)" \
             --notes "Latest Reuz build from main. Reuz.apk installs on a phone; Reuz.aab is the Google Play upload bundle." --latest
+
+      - name: Remove temporary decrypted signing key
+        if: always()
+        shell: bash
+        run: |
+          if [[ -n "${REUZ_KEYSTORE:-}" && -f "$REUZ_KEYSTORE" ]]; then
+            shred -u "$REUZ_KEYSTORE" 2>/dev/null || rm -f "$REUZ_KEYSTORE"
+          fi
