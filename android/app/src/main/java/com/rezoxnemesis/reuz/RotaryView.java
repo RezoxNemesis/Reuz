@@ -3,6 +3,7 @@ package com.rezoxnemesis.reuz;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RadialGradient;
@@ -77,20 +78,28 @@ public class RotaryView extends View {
     @Override
     protected void onDraw(Canvas c) {
         float r = radius();
-        // Base plate with the numbers that show through the finger holes.
-        paint.setShader(new RadialGradient(cx(), cy(), r, 0xFF1A2038, 0xFF0A0D1A, Shader.TileMode.CLAMP));
+        // Layered steel rim around the dark number plate.
         paint.setStyle(Paint.Style.FILL);
+        paint.setShader(new LinearGradient(cx() - r, cy() - r, cx() + r, cy() + r,
+                new int[] { 0xFFB6B1A4, 0xFF454B4D, 0xFF12191E, 0xFF857465 },
+                new float[] { 0f, 0.28f, 0.68f, 1f }, Shader.TileMode.CLAMP));
         c.drawCircle(cx(), cy(), r, paint);
+        paint.setShader(new RadialGradient(cx() - r * 0.25f, cy() - r * 0.3f, r * 1.4f,
+                0xFF222A2F, 0xFF070B0E, Shader.TileMode.CLAMP));
+        c.drawCircle(cx(), cy(), r * 0.965f, paint);
         paint.setShader(null);
         paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(r * 0.012f);
-        paint.setColor(0x33FFFFFF);
-        c.drawCircle(cx(), cy(), r, paint);
+        paint.setStrokeWidth(r * 0.004f);
+        paint.setColor(0x998E989A);
+        c.drawCircle(cx(), cy(), r * 0.985f, paint);
+        paint.setColor(0xCC070B0E);
+        c.drawCircle(cx(), cy(), r * 0.945f, paint);
 
+        // Numbers stay fixed while the finger plate turns above them.
         paint.setStyle(Paint.Style.FILL);
-        paint.setColor(0xFFFFD98C);
+        paint.setColor(0xFFF4F2E9);
         paint.setTextAlign(Paint.Align.CENTER);
-        paint.setFakeBoldText(true);
+        paint.setFakeBoldText(false);
         paint.setTextSize(r * 0.15f);
         for (int n = 1; n <= 10; n++) {
             float a = holeAngle(n);
@@ -107,32 +116,55 @@ public class RotaryView extends View {
         }
         c.save();
         c.rotate(rotation, cx(), cy());
-        paint.setColor(0xFF2A3256);
+        paint.setShader(new LinearGradient(cx() - r, cy() - r, cx() + r, cy() + r,
+                new int[] { 0xFF4A5051, 0xFF20282D, 0xFF0B1115, 0xFF383630 },
+                new float[] { 0f, 0.25f, 0.7f, 1f }, Shader.TileMode.CLAMP));
         c.drawPath(plate, paint);
+        paint.setShader(null);
         paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(r * 0.02f);
-        paint.setColor(0xFFFFB25B);
+        paint.setStrokeWidth(r * 0.008f);
+        paint.setColor(0xFF7A7F7C);
         c.drawCircle(cx(), cy(), r * 0.93f, paint);
+        paint.setStrokeWidth(r * 0.006f);
         for (int n = 1; n <= 10; n++) {
             float a = holeAngle(n);
+            paint.setColor(0xFF95978E);
             c.drawCircle(px(a, ring()), py(a, ring()), holeR(), paint);
+            paint.setColor(0xFF070B0D);
+            c.drawCircle(px(a, ring()), py(a, ring()), holeR() + r * 0.012f, paint);
         }
+        paint.setColor(0x665D6568);
+        paint.setStrokeWidth(r * 0.005f);
+        c.drawCircle(cx(), cy(), r * 0.40f, paint);
         c.restore();
 
-        // Finger stop.
+        // The fixed finger stop catches the light like a small piece of brushed metal.
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeCap(Paint.Cap.ROUND);
-        paint.setStrokeWidth(r * 0.05f);
-        paint.setColor(0xFFFFC46B);
+        paint.setStrokeWidth(r * 0.075f);
+        paint.setColor(0xFF080C0F);
+        c.drawLine(px(STOP_DEG, r * 0.78f), py(STOP_DEG, r * 0.78f), px(STOP_DEG, r * 1.0f), py(STOP_DEG, r * 1.0f), paint);
+        paint.setStrokeWidth(r * 0.052f);
+        paint.setShader(new LinearGradient(px(STOP_DEG, r * 0.80f), py(STOP_DEG, r * 0.80f),
+                px(STOP_DEG, r), py(STOP_DEG, r), 0xFFEBE8D9, 0xFF897866, Shader.TileMode.CLAMP));
         c.drawLine(px(STOP_DEG, r * 0.80f), py(STOP_DEG, r * 0.80f), px(STOP_DEG, r * 1.0f), py(STOP_DEG, r * 1.0f), paint);
+        paint.setShader(null);
 
         // Hub.
         paint.setStyle(Paint.Style.FILL);
-        paint.setColor(0xFFFFC46B);
-        c.drawCircle(cx(), cy(), r * 0.25f, paint);
-        paint.setColor(0xFF10142A);
-        c.drawCircle(cx(), cy(), r * 0.20f, paint);
-        paint.setColor(0xFFFFD98C);
+        paint.setColor(0xFF080C0E);
+        c.drawCircle(cx(), cy(), r * 0.30f, paint);
+        paint.setShader(new RadialGradient(cx() - r * 0.08f, cy() - r * 0.10f, r * 0.43f,
+                0xFFFFD284, 0xFFF39422, Shader.TileMode.CLAMP));
+        c.drawCircle(cx(), cy(), r * 0.265f, paint);
+        paint.setShader(null);
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeWidth(r * 0.008f);
+        paint.setColor(0xFFFFD790);
+        c.drawCircle(cx(), cy(), r * 0.265f, paint);
+        paint.setStyle(Paint.Style.FILL);
+        paint.setColor(0xFF211709);
+        paint.setFakeBoldText(true);
         paint.setTextSize(r * 0.20f);
         c.drawText(hub, cx(), cy() + paint.getTextSize() * 0.35f, paint);
     }
