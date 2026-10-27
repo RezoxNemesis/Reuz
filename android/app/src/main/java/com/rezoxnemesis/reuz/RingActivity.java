@@ -4,10 +4,10 @@ import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.app.NotificationManager;
-import android.content.Context;
-import android.graphics.Color;
+import android.content.res.ColorStateList;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.RippleDrawable;
 import android.media.AudioAttributes;
 import android.media.MediaPlayer;
 import android.media.RingtoneManager;
@@ -20,9 +20,11 @@ import android.os.Vibrator;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.WindowInsets;
 import android.window.OnBackInvokedDispatcher;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextClock;
 import android.widget.TextView;
 
@@ -50,6 +52,7 @@ public class RingActivity extends Activity {
     private Vibrator vibrator;
     private LinearLayout root;
     private LinearLayout stage;
+    private GradientDrawable backdrop;
     private ValueAnimator sunrise;
     private boolean finished;
 
@@ -69,6 +72,9 @@ public class RingActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setStatusBarColor(0xFF0B1014);
+        getWindow().setNavigationBarColor(0xFF0B1014);
+        getWindow().getDecorView().setSystemUiVisibility(0);
         if (Build.VERSION.SDK_INT >= 27) {
             setShowWhenLocked(true);
             setTurnScreenOn(true);
@@ -116,7 +122,8 @@ public class RingActivity extends Activity {
         t.setTextSize(sp);
         t.setTextColor(color);
         t.setGravity(Gravity.CENTER);
-        if (bold) t.setTypeface(Typeface.DEFAULT_BOLD);
+        t.setTypeface(Typeface.create(bold ? "sans-serif-medium" : "sans-serif", Typeface.NORMAL));
+        t.setIncludeFontPadding(false);
         return t;
     }
 
@@ -124,12 +131,18 @@ public class RingActivity extends Activity {
         Button b = new Button(this);
         b.setText(label);
         b.setAllCaps(false);
-        b.setTextSize(17);
-        b.setTextColor(primary ? 0xFF1A1004 : 0xFFEEF2FB);
-        GradientDrawable bg = new GradientDrawable();
+        b.setTextSize(16);
+        b.setTypeface(Typeface.create("sans-serif-medium", Typeface.NORMAL));
+        b.setTextColor(primary ? 0xFF231505 : 0xFFF3F3EF);
+        GradientDrawable bg = new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM,
+                primary ? new int[] { 0xFFFFC260, 0xFFFFA025 }
+                        : new int[] { 0xFF30393E, 0xFF151D22 });
         bg.setCornerRadius(dp(18));
-        bg.setColor(primary ? 0xFFFFC46B : 0x33FFFFFF);
-        b.setBackground(bg);
+        bg.setStroke(dp(1), primary ? 0xFFFFD18A : 0xFF596165);
+        b.setBackground(new RippleDrawable(ColorStateList.valueOf(
+                primary ? 0x33271504 : 0x33FFBB62), bg, null));
+        b.setBackgroundTintList(null);
+        b.setElevation(dp(primary ? 5 : 2));
         b.setOnClickListener(l);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, dp(56));
@@ -142,25 +155,56 @@ public class RingActivity extends Activity {
         root = new LinearLayout(this);
         root.setOrientation(LinearLayout.VERTICAL);
         root.setGravity(Gravity.CENTER_HORIZONTAL);
-        root.setPadding(dp(24), dp(56), dp(24), dp(32));
-        root.setBackgroundColor(0xFF0B0D12);
+        root.setPadding(dp(24), dp(32), dp(24), dp(24));
+        backdrop = new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM,
+                new int[] { 0xFF0B1014, 0xFF211C17 });
+        root.setBackground(backdrop);
+        root.setOnApplyWindowInsetsListener((v, insets) -> {
+            int l, t, r, b;
+            if (Build.VERSION.SDK_INT >= 30) {
+                android.graphics.Insets bars = insets.getInsets(
+                        WindowInsets.Type.systemBars() | WindowInsets.Type.displayCutout());
+                l = bars.left; t = bars.top; r = bars.right; b = bars.bottom;
+            } else {
+                l = insets.getSystemWindowInsetLeft(); t = insets.getSystemWindowInsetTop();
+                r = insets.getSystemWindowInsetRight(); b = insets.getSystemWindowInsetBottom();
+            }
+            v.setPadding(dp(24) + l, dp(32) + t, dp(24) + r, dp(24) + b);
+            return Build.VERSION.SDK_INT >= 30 ? WindowInsets.CONSUMED : insets.consumeSystemWindowInsets();
+        });
+
+        TextView brand = text("Reuz", 16, 0xFFFFBC61, true);
+        brand.setLetterSpacing(0.08f);
+        LinearLayout.LayoutParams brandParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        brandParams.bottomMargin = dp(20);
+        root.addView(brand, brandParams);
 
         TextClock clock = new TextClock(this);
         clock.setFormat12Hour("h:mm");
         clock.setFormat24Hour("HH:mm");
-        clock.setTextSize(76);
-        clock.setTextColor(0xFFFFFFFF);
-        clock.setTypeface(Typeface.create("sans-serif-thin", Typeface.NORMAL));
+        clock.setTextSize(70);
+        clock.setTextColor(0xFFF4F5F2);
+        clock.setTypeface(Typeface.create("sans-serif-medium", Typeface.NORMAL));
+        clock.setIncludeFontPadding(false);
         clock.setGravity(Gravity.CENTER);
         root.addView(clock);
 
         String body = item.optString("body", "");
-        root.addView(text(item.optString("title", "Rise and shine"), 22, 0xFFFFC46B, true));
-        if (!body.isEmpty()) root.addView(text(body, 16, 0xFFD5DBEA, false));
+        TextView title = text(item.optString("title", "Rise and shine"), 22, 0xFFFFBC61, true);
+        title.setPadding(0, dp(14), 0, dp(8));
+        root.addView(title);
+        if (!body.isEmpty()) root.addView(text(body, 16, 0xFFBBC4C9, false));
 
         stage = new LinearLayout(this);
         stage.setOrientation(LinearLayout.VERTICAL);
         stage.setGravity(Gravity.CENTER_HORIZONTAL);
+        stage.setPadding(dp(16), dp(20), dp(16), dp(16));
+        GradientDrawable glass = new GradientDrawable(GradientDrawable.Orientation.TL_BR,
+                new int[] { 0xD6384248, 0xE612191E, 0xD6262622 });
+        glass.setCornerRadius(dp(26));
+        glass.setStroke(dp(1), 0x886E777A);
+        stage.setBackground(glass);
         LinearLayout.LayoutParams sp = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f);
         sp.topMargin = dp(24);
@@ -173,7 +217,9 @@ public class RingActivity extends Activity {
     }
 
     private void buildPlain() {
-        stage.setGravity(Gravity.BOTTOM);
+        stage.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
+        stage.setBackground(null);
+        stage.setPadding(0, 0, 0, 0);
         stage.addView(button(getString(R.string.dismiss), true, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -210,8 +256,9 @@ public class RingActivity extends Activity {
     private void buildDial() {
         code = new int[3];
         for (int i = 0; i < code.length; i++) code[i] = random.nextInt(10);
-        stage.addView(text(getString(R.string.dial_prompt), 15, 0xFFD5DBEA, false));
-        codeText = text("", 34, 0xFFFFFFFF, true);
+        stage.addView(text(getString(R.string.dial_prompt), 15, 0xFFBBC4C9, false));
+        codeText = text("", 34, 0xFFFFBC61, true);
+        codeText.setPadding(0, dp(12), 0, dp(4));
         stage.addView(codeText);
         rotary = new RotaryView(this);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
@@ -250,11 +297,22 @@ public class RingActivity extends Activity {
     // ---- Math challenge ----------------------------------------------------------------------
 
     private void buildMath() {
-        questionText = text("", 40, 0xFFFFFFFF, true);
-        answerText = text("", 34, 0xFFFFC46B, true);
-        stage.addView(text(getString(R.string.math_prompt), 15, 0xFFD5DBEA, false));
-        stage.addView(questionText);
-        stage.addView(answerText);
+        // Keep every key reachable on compact screens and when the user enlarges text.
+        ScrollView scroll = new ScrollView(this);
+        scroll.setFillViewport(true);
+        scroll.setClipToPadding(false);
+        LinearLayout keypad = new LinearLayout(this);
+        keypad.setOrientation(LinearLayout.VERTICAL);
+        scroll.addView(keypad, new ScrollView.LayoutParams(
+                ScrollView.LayoutParams.MATCH_PARENT, ScrollView.LayoutParams.WRAP_CONTENT));
+        stage.addView(scroll, new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f));
+        questionText = text("", 40, 0xFFF4F5F2, true);
+        questionText.setPadding(0, dp(12), 0, dp(8));
+        answerText = text("", 34, 0xFFFFBC61, true);
+        keypad.addView(text(getString(R.string.math_prompt), 15, 0xFFBBC4C9, false));
+        keypad.addView(questionText);
+        keypad.addView(answerText);
 
         String[][] rows = { { "1", "2", "3" }, { "4", "5", "6" }, { "7", "8", "9" }, { "⌫", "0", "OK" } };
         for (String[] row : rows) {
@@ -272,7 +330,7 @@ public class RingActivity extends Activity {
                 b.setLayoutParams(lp);
                 line.addView(b);
             }
-            stage.addView(line, new LinearLayout.LayoutParams(
+            keypad.addView(line, new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
         }
         nextQuestion();
@@ -348,12 +406,12 @@ public class RingActivity extends Activity {
     }
 
     private void startSunrise() {
-        sunrise = ValueAnimator.ofObject(new ArgbEvaluator(), 0xFF0B0D12, 0xFF6A3A16, 0xFFFFB25B);
+        sunrise = ValueAnimator.ofObject(new ArgbEvaluator(), 0xFF211C17, 0xFF3B2A1D, 0xFF684021);
         sunrise.setDuration(RAMP_MS * 2);
         sunrise.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator a) {
-                root.setBackgroundColor((Integer) a.getAnimatedValue());
+                backdrop.setColors(new int[] { 0xFF0B1014, (Integer) a.getAnimatedValue() });
             }
         });
         sunrise.start();

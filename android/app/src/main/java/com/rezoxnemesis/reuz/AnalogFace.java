@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.LinearGradient;
 import android.graphics.Paint;
+import android.graphics.RadialGradient;
 import android.graphics.Shader;
 
 import java.util.Calendar;
@@ -22,24 +23,31 @@ final class AnalogFace {
 
         if (withFace) {
             p.setStyle(Paint.Style.FILL);
-            p.setShader(new LinearGradient(0, 0, SIZE, SIZE, 0xE62A3350, 0xE60B0D12, Shader.TileMode.CLAMP));
+            p.setShader(new LinearGradient(0, 0, SIZE, SIZE,
+                    new int[] { 0xFFBAB3A3, 0xFF3D4549, 0xFF131A1E, 0xFF97765B },
+                    new float[] { 0f, 0.25f, 0.70f, 1f }, Shader.TileMode.CLAMP));
             c.drawCircle(mid, mid, r, p);
+            p.setShader(new RadialGradient(mid - 50f, mid - 60f, SIZE,
+                    0xFF242C31, 0xFF080D10, Shader.TileMode.CLAMP));
+            c.drawCircle(mid, mid, r - 8f, p);
             p.setShader(null);
             p.setStyle(Paint.Style.STROKE);
-            p.setStrokeWidth(3f);
-            p.setColor(0x44FFFFFF);
-            c.drawCircle(mid, mid, r, p);
+            p.setStrokeWidth(1.5f);
+            p.setColor(0xAAABB0AC);
+            c.drawCircle(mid, mid, r - 3f, p);
+            p.setColor(0xAA687172);
+            c.drawCircle(mid, mid, r - 14f, p);
         }
 
-        int brass = 0xFFFFC46B;
+        int brass = 0xFFFFB44F;
         p.setStyle(Paint.Style.STROKE);
         p.setStrokeCap(Paint.Cap.ROUND);
         for (int i = 0; i < 60; i++) {
             boolean hour = i % 5 == 0;
             double a = Math.toRadians(i * 6);
-            float outer = r - 14f, inner = outer - (hour ? 26f : 9f);
-            p.setStrokeWidth(hour ? 7f : 3f);
-            p.setColor(hour ? brass : 0x88FFFFFF);
+            float outer = r - 23f, inner = outer - (hour ? 22f : 8f);
+            p.setStrokeWidth(hour ? 5f : 2f);
+            p.setColor(hour ? brass : 0xFF748084);
             if (!withFace && !hour) p.setColor(0x66FFFFFF);
             c.drawLine(mid + (float) Math.sin(a) * inner, mid - (float) Math.cos(a) * inner,
                     mid + (float) Math.sin(a) * outer, mid - (float) Math.cos(a) * outer, p);
@@ -48,14 +56,14 @@ final class AnalogFace {
         float sec = cal.get(Calendar.SECOND);
         float min = cal.get(Calendar.MINUTE) + sec / 60f;
         float hr = (cal.get(Calendar.HOUR) % 12) + min / 60f;
-        hand(c, p, mid, hr * 30f, r * 0.50f, 13f, 0xFFF4F7FF, withFace);
-        hand(c, p, mid, min * 6f, r * 0.76f, 8f, 0xFFF4F7FF, withFace);
+        hand(c, p, mid, hr * 30f, r * 0.50f, 10f, 0xFFFFC16A, withFace);
+        hand(c, p, mid, min * 6f, r * 0.76f, 6f, brass, withFace);
 
         p.setStyle(Paint.Style.FILL);
         p.setColor(brass);
-        c.drawCircle(mid, mid, 12f, p);
-        p.setColor(0xFF0B0D12);
-        c.drawCircle(mid, mid, 4.5f, p);
+        c.drawCircle(mid, mid, 11f, p);
+        p.setColor(0xFF11181C);
+        c.drawCircle(mid, mid, 4f, p);
         return bmp;
     }
 

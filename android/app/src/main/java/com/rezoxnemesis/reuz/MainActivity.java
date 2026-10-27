@@ -24,13 +24,16 @@ import androidx.webkit.WebViewAssetLoader;
 public class MainActivity extends Activity implements ProStore.Listener {
     private static final String PAGE = "https://appassets.androidplatform.net/assets/index.html";
     private static final String PRIVACY_HOST = "reuz.prakasharuntandon634.workers.dev";
-    private static final int BACKGROUND = Color.rgb(11, 13, 18);
+    private static final int BACKGROUND = Color.rgb(11, 16, 20);
     private WebView web;
     private ProStore store;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setStatusBarColor(BACKGROUND);
+        getWindow().setNavigationBarColor(BACKGROUND);
+        getWindow().getDecorView().setSystemUiVisibility(0); // white system icons over the dark shell
 
         final WebViewAssetLoader loader = new WebViewAssetLoader.Builder()
                 .addPathHandler("/assets/", new WebViewAssetLoader.AssetsPathHandler(this))

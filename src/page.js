@@ -3,12 +3,14 @@
 // window.ReuzNative when running inside the Android app.
 // NOTE: this file is one template literal. Do not use backticks, dollar-brace, or backslashes
 // inside it: they would be changed before the browser sees the code.
+import { ATELIER_CSS } from "./atelier.css.js";
+
 export const PAGE_HTML = `<!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#0a0c12">
+<meta name="theme-color" content="#0b1014">
 <meta name="color-scheme" content="dark">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 108 108'%3E%3Crect width='108' height='108' rx='24' fill='%230b0d18'/%3E%3Ccircle cx='54' cy='54' r='30' fill='none' stroke='%23ffb454' stroke-width='5'/%3E%3Cpath d='M54 54L46 49.5M54 54L66 47' stroke='%23fff' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E">
 <title>Reuz Clock</title>
@@ -192,6 +194,7 @@ label { display:block; font-size:13px; color:var(--muted); margin:16px 0 6px; }
 .alert .small { color:var(--muted); margin-top:8px; font-size:15px; }
 .alert .btn { margin-top:20px; width:100%; }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation:none !important; transition:none !important; } }
+${ATELIER_CSS}
 </style>
 </head>
 <body>
@@ -199,10 +202,10 @@ label { display:block; font-size:13px; color:var(--muted); margin:16px 0 6px; }
 <div class="app">
   <header class="top">
     <div class="brandrow">
-      <svg class="logo" viewBox="0 0 108 108" aria-hidden="true"><defs><linearGradient id="lbg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1b2342"/><stop offset="1" stop-color="#090b14"/></linearGradient><linearGradient id="lbr" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffd98c"/><stop offset="1" stop-color="#ff9b45"/></linearGradient></defs><rect width="108" height="108" fill="url(#lbg)"/><circle cx="54" cy="54" r="30" fill="none" stroke="url(#lbr)" stroke-width="4.2"/><g fill="url(#lbr)"><circle cx="74.4" cy="47.4" r="3.1"/><circle cx="68.9" cy="38.5" r="3.1"/><circle cx="59.9" cy="33.3" r="3.1"/><circle cx="49.5" cy="33" r="3.1"/><circle cx="40.2" cy="37.5" r="3.1"/><circle cx="34.1" cy="45.9" r="3.1"/><circle cx="32.6" cy="56.2" r="3.1"/><circle cx="36.2" cy="66" r="3.1"/><circle cx="43.9" cy="73" r="3.1"/><circle cx="54" cy="75.5" r="3.1"/></g><circle cx="72.6" cy="64.8" r="3.1" fill="#7cc4ff"/><g stroke="#f4f7ff" stroke-linecap="round"><line x1="54" y1="54" x2="46.2" y2="49.5" stroke-width="3.4"/><line x1="54" y1="54" x2="66.1" y2="47" stroke-width="2.6"/></g><circle cx="54" cy="54" r="2.6" fill="url(#lbr)"/></svg>
+      <svg class="logo" viewBox="0 0 108 108" aria-hidden="true"><defs><linearGradient id="lbg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1b2342"/><stop offset="1" stop-color="#090b14"/></linearGradient><linearGradient id="lbr" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffd98c"/><stop offset="1" stop-color="#ff9b45"/></linearGradient></defs><rect width="108" height="108" fill="url(#lbg)"/><circle cx="54" cy="54" r="30" fill="none" stroke="url(#lbr)" stroke-width="4.2"/><g fill="url(#lbr)"><circle cx="74.4" cy="47.4" r="3.1"/><circle cx="68.9" cy="38.5" r="3.1"/><circle cx="59.9" cy="33.3" r="3.1"/><circle cx="49.5" cy="33" r="3.1"/><circle cx="40.2" cy="37.5" r="3.1"/><circle cx="34.1" cy="45.9" r="3.1"/><circle cx="32.6" cy="56.2" r="3.1"/><circle cx="36.2" cy="66" r="3.1"/><circle cx="43.9" cy="73" r="3.1"/><circle cx="54" cy="75.5" r="3.1"/></g><circle cx="72.6" cy="64.8" r="3.1" fill="#ffb454"/><g stroke="#f4f7ff" stroke-linecap="round"><line x1="54" y1="54" x2="46.2" y2="49.5" stroke-width="3.4"/><line x1="54" y1="54" x2="66.1" y2="47" stroke-width="2.6"/></g><circle cx="54" cy="54" r="2.6" fill="url(#lbr)"/></svg>
       <div><div class="brand">Reuz</div><div class="tagline" id="tagline">Time, wound up just right</div></div>
     </div>
-    <button class="pill glass tap" id="openSettings" aria-haspopup="dialog" aria-controls="sheet">Settings</button>
+    <button class="pill glass tap" id="openSettings" aria-label="Settings" aria-haspopup="dialog" aria-controls="sheet"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="m9.2 3-.6 2.2-2 .9-2-.7-1.8 3.2 1.5 1.5-.2 2.2L2.5 14l1.8 3.2 2.1-.5 1.8 1.3.4 2.2h3.7l.8-2.1 2.1-.8 2 .8 1.9-3.2-1.4-1.7.1-2.2 1.6-1.6-1.8-3.2-2.2.5-1.8-1.2-.5-2.3Z"/><circle cx="10.9" cy="11.5" r="3.2"/></svg></button>
   </header>
   <main>
     <section class="panel active" id="p-clock" aria-label="Clock">
@@ -218,41 +221,44 @@ label { display:block; font-size:13px; color:var(--muted); margin:16px 0 6px; }
         </div>
         <div class="fx" id="heroFx"></div>
       </div>
-      <div class="grid">
-        <div class="card glass mini tap"><div class="label">Next alarm</div><div class="value" id="nextAlarm">None set</div><div class="note" id="nextAlarmNote">Sleep like a rock</div></div>
-        <div class="card glass mini tap"><div class="label">Timers running</div><div class="value" id="timerCount">0</div><div class="note" id="timerNote">Nothing ticking</div></div>
+      <div class="grid home-summary">
+        <button type="button" class="card glass mini tap" id="homeAlarm" aria-label="View alarms"><svg class="summary-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M6 9a6 6 0 0 1 12 0c0 6 3 7 3 7H3s3-1 3-7M10 20h4M12 2v2"/></svg><div class="label">Next alarm</div><div class="value" id="nextAlarm">None set</div><div class="note" id="nextAlarmNote">Sleep like a rock</div></button>
+        <button type="button" class="card glass mini tap" id="homeTimers" aria-label="View timers"><svg class="summary-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M9 2h6M12 9v4l3 2M18 6l2-2"/></svg><div class="label">Timers running</div><div class="value" id="timerCount">0</div><div class="note" id="timerNote">Nothing ticking</div></button>
       </div>
-      <div class="card glass" style="margin-top:12px"><div class="label">Today so far</div><div class="daybar"><i id="dayfill"></i></div><div class="note" id="daynote"></div></div>
+      <div class="card glass day-card" style="margin-top:12px"><div class="day-head"><div class="label">Today so far</div><span class="day-percent" id="dayPercent">0%</span></div><div class="daybar"><i id="dayfill"></i></div><div class="note" id="daynote"></div></div>
     </section>
     <section class="panel" id="p-world" aria-label="World clock">
-      <div class="card glass">
-        <div class="form">
-          <select id="worldSel" aria-label="Pick a city timezone"></select>
-          <input id="worldCustom" type="text" placeholder="Or type an IANA name" autocomplete="off" autocapitalize="off" spellcheck="false">
-          <button class="btn tap" id="worldAdd">Add city</button>
-        </div>
-      </div>
+      <div class="section-heading"><div><div class="eyebrow">Across the world</div><h1>World clock</h1></div><button class="btn tap city-plus" id="openCitySheet" aria-label="Add city" aria-haspopup="dialog" aria-controls="citySheet">+</button></div>
+      <div class="world-toolbar"><label class="search-shell"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="m15 15 6 6"/></svg><input id="worldSearch" type="search" placeholder="Search your cities" aria-label="Search saved cities" autocomplete="off"></label></div>
       <div id="worldList"></div>
+      <div class="empty" id="worldNoMatch" hidden>No matching cities. Use + to add another.</div>
     </section>
     <section class="panel" id="p-timer" aria-label="Timer">
-      <div class="card glass" style="text-align:center">
-        <div class="edit-hint">Tap the time to dial it in</div>
-        <button class="timebtn" id="timerDraft" aria-label="Set timer duration"><div class="bigtime" id="timerNew">05:00</div></button>
-        <div class="chips" id="timerPresets"></div>
+      <div class="section-heading"><div><div class="eyebrow">Make time for focus</div><h1>Set timer</h1></div><span class="heading-mark" aria-hidden="true">01 / 60</span></div>
+      <div class="card glass instrument-card timer-instrument">
+        <div class="chips" id="timerPresets" aria-label="Timer presets"></div>
         <div class="chips" id="focusPresets" hidden aria-label="Focus sessions"></div>
-        <div class="form" style="margin-top:16px">
-          <input id="timerLabel" type="text" placeholder="Label (optional)" maxlength="40">
-          <button class="btn tap" id="timerAdd">Start timer</button>
+        <div class="dial-stage">
+          <div class="instrument-screws" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+          <button class="timebtn instrument-face" id="timerDraft" aria-label="Set timer duration">
+            <svg class="instrument-ticks" id="timerTicks" viewBox="0 0 300 300" aria-hidden="true"></svg>
+            <div class="dial-readout"><div class="bigtime" id="timerNew">05:00</div><div class="dial-caption" id="timerUnit">MIN / SEC</div></div>
+          </button>
         </div>
+        <div class="seg timer-modes" role="group" aria-label="Set timer with"><button type="button" id="timerSpin" aria-haspopup="dialog">Spin dial</button><button type="button" id="timerRotary" aria-haspopup="dialog">Rotary phone</button></div>
+        <label class="field-caption" for="timerLabel">Timer label</label><input id="timerLabel" type="text" placeholder="Label (optional)" maxlength="40">
+        <button class="btn tap wide" id="timerAdd">▶ &nbsp; Start timer</button>
       </div>
       <div id="timerList"></div>
     </section>
     <section class="panel" id="p-stop" aria-label="Stopwatch">
-      <div class="card glass" style="text-align:center">
-        <div class="swwrap">
+      <div class="section-heading"><div><div class="eyebrow">Every moment matters</div><h1>Stopwatch</h1></div><span class="heading-mark" aria-hidden="true">1 / 100 SEC</span></div>
+      <div class="card glass instrument-card" style="text-align:center">
+        <div class="dial-stage"><div class="instrument-screws" aria-hidden="true"><i></i><i></i><i></i><i></i></div><div class="swwrap instrument-face">
+          <svg class="instrument-ticks" id="stopTicks" viewBox="0 0 300 300" aria-hidden="true"></svg>
           <svg viewBox="0 0 100 100"><defs><linearGradient id="swg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffc46b"/><stop offset="1" stop-color="#ff9b45"/></linearGradient></defs><circle class="t" cx="50" cy="50" r="44"/><circle class="p" id="swRing" cx="50" cy="50" r="44" stroke-dasharray="276.5" stroke-dashoffset="276.5"/></svg>
-          <div class="bigtime" id="swTime">00:00.00</div>
-        </div>
+          <div class="dial-readout"><div class="bigtime" id="swTime">00:00.00</div><div class="dial-caption">MIN &nbsp;&nbsp; SEC &nbsp;&nbsp; CS</div></div>
+        </div></div>
         <div class="controls">
           <button class="btn tap" id="swStart">Start</button>
           <button class="btn ghost tap" id="swLap">Lap</button>
@@ -262,8 +268,9 @@ label { display:block; font-size:13px; color:var(--muted); margin:16px 0 6px; }
       <div id="swLaps"></div>
     </section>
     <section class="panel" id="p-alarm" aria-label="Alarms">
-      <div class="card glass" style="text-align:center">
-        <div class="edit-hint">Tap the time to dial it in</div>
+      <div class="section-heading"><div><div class="eyebrow">A better beginning</div><h1>Alarms</h1></div><span class="heading-mark" aria-hidden="true">WAKE WELL</span></div>
+      <div class="card glass alarm-composer" style="text-align:center">
+        <div class="edit-hint">Next wake-up · tap to set</div>
         <button class="timebtn" id="alarmDraft" aria-label="Set alarm time"><div class="bigtime" id="alarmNew">07:00</div></button>
         <div class="chips days" id="dayChips" role="group" aria-label="Repeat days"></div>
         <div class="wake" id="wakeBox" hidden>
@@ -284,7 +291,7 @@ label { display:block; font-size:13px; color:var(--muted); margin:16px 0 6px; }
           <div class="setrow"><div>Gentle volume<small>Start soft and rise over a minute</small></div><button class="toggle" id="optGentle" role="switch" aria-checked="true" aria-label="Gentle volume"></button></div>
         </div>
         <div class="form" style="margin-top:16px">
-          <input id="alarmLabel" type="text" placeholder="Label (optional)" maxlength="40">
+          <input id="alarmLabel" type="text" placeholder="Label (optional)" aria-label="Alarm label" maxlength="40">
           <button class="btn tap" id="alarmAdd">Add alarm</button>
         </div>
       </div>
@@ -306,7 +313,9 @@ label { display:block; font-size:13px; color:var(--muted); margin:16px 0 6px; }
 
 <section class="sheet glass" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
   <div class="grab"></div>
-  <h2 id="sheetTitle">Clock settings</h2>
+  <h2 id="sheetTitle">Settings</h2>
+  <div class="settings-heading"><span class="eyebrow">Make Reuz yours</span><p>Quiet details. Your kind of time.</p></div>
+  <label>Appearance</label><div class="seg c3" role="group" aria-label="Appearance"><button type="button" data-theme-choice="light" aria-pressed="false">Light</button><button type="button" data-theme-choice="dark" aria-pressed="true">Dark</button><button type="button" data-theme-choice="system" aria-pressed="false">System</button></div>
   <label for="tz">Home timezone</label>
   <select id="tz"></select>
   <label for="tzCustom">Or type any IANA name</label>
@@ -325,6 +334,11 @@ label { display:block; font-size:13px; color:var(--muted); margin:16px 0 6px; }
     <button class="btn" type="button" id="save">Save</button>
   </div>
   <div class="status" id="status" role="status"></div>
+</section>
+
+<section class="sheet glass" id="citySheet" role="dialog" aria-modal="true" aria-labelledby="cityTitle">
+  <div class="grab"></div><h2 id="cityTitle">Add city</h2><label for="worldCustom">Search city or time zone</label><input id="worldCustom" type="text" placeholder="Tokyo, London, Asia/Kolkata…" autocomplete="off" autocapitalize="off" spellcheck="false"><div id="cityResults" class="city-results" role="group" aria-label="Matching time zones"></div>
+  <label for="worldSel">Choose a time zone</label><select id="worldSel" aria-label="Pick a city timezone"></select><div class="actions"><button class="btn ghost" id="cityCancel">Cancel</button><button class="btn tap" id="worldAdd">Add city</button></div><div id="cityStatus" class="status" role="status"></div>
 </section>
 
 <section class="sheet glass" id="paySheet" role="dialog" aria-modal="true" aria-labelledby="payTitle">
@@ -357,7 +371,7 @@ label { display:block; font-size:13px; color:var(--muted); margin:16px 0 6px; }
     <div class="dialview active" id="viewSpin">
       <svg id="knob" viewBox="0 0 300 300" aria-label="Spin dial. Drag around the ring to set the value.">
         <defs>
-          <radialGradient id="kdisc" cx=".35" cy=".3" r=".9"><stop offset="0" stop-color="#2b3358"/><stop offset="1" stop-color="#0d1020"/></radialGradient>
+          <radialGradient id="kdisc" cx=".35" cy=".3" r=".9"><stop offset="0" stop-color="#303c42"/><stop offset="1" stop-color="#0a1014"/></radialGradient>
           <linearGradient id="kbrass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffd98c"/><stop offset="1" stop-color="#ff9b45"/></linearGradient>
           <filter id="kglow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="5"/></filter>
         </defs>
@@ -376,9 +390,9 @@ label { display:block; font-size:13px; color:var(--muted); margin:16px 0 6px; }
     <div class="dialview" id="viewRotary">
       <svg id="rotary" viewBox="0 0 300 300" aria-label="Rotary phone dial. Drag a number around to the stop, then let go.">
         <defs>
-          <radialGradient id="rbase" cx=".5" cy=".5" r=".6"><stop offset="0" stop-color="#1a2038"/><stop offset="1" stop-color="#0a0d1a"/></radialGradient>
+          <radialGradient id="rbase" cx=".5" cy=".5" r=".6"><stop offset="0" stop-color="#172127"/><stop offset="1" stop-color="#070c10"/></radialGradient>
           <linearGradient id="rbrass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffd98c"/><stop offset="1" stop-color="#ff9b45"/></linearGradient>
-          <linearGradient id="rplate" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3a4268"/><stop offset="1" stop-color="#171c33"/></linearGradient>
+          <linearGradient id="rplate" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#455158"/><stop offset="1" stop-color="#151e23"/></linearGradient>
           <mask id="rholes" maskUnits="userSpaceOnUse" x="0" y="0" width="300" height="300"><rect width="300" height="300" fill="#fff"/><g id="rmask"></g></mask>
         </defs>
         <circle cx="150" cy="150" r="146" fill="url(#rbase)" stroke="rgba(255,255,255,.14)"/>
@@ -386,7 +400,7 @@ label { display:block; font-size:13px; color:var(--muted); margin:16px 0 6px; }
         <g id="rplateg"><g mask="url(#rholes)"><circle cx="150" cy="150" r="140" fill="url(#rplate)"/><circle cx="150" cy="150" r="140" fill="none" stroke="rgba(255,255,255,.18)" stroke-width="2"/></g><g id="rrims" fill="none" stroke="url(#rbrass)" stroke-width="2.4"></g></g>
         <g id="rstop"></g>
         <circle cx="150" cy="150" r="38" fill="url(#rbrass)"/>
-        <circle cx="150" cy="150" r="31" fill="#10142a"/>
+        <circle cx="150" cy="150" r="31" fill="#10171b"/>
         <text id="rhub" class="hubdigit" x="150" y="151" text-anchor="middle" dominant-baseline="central" font-size="30" font-weight="700" fill="#ffd98c">R</text>
       </svg>
     </div>
@@ -411,9 +425,9 @@ label { display:block; font-size:13px; color:var(--muted); margin:16px 0 6px; }
   var ZONES = ["UTC","Asia/Kolkata","Asia/Dubai","Asia/Singapore","Asia/Tokyo","Europe/London","Europe/Paris","Europe/Berlin","America/New_York","America/Chicago","America/Los_Angeles","Australia/Sydney","Pacific/Auckland"];
   var TABS = ["clock","world","timer","stop","alarm"];
   var home = { timezone: "UTC", format: "24h" };
-  var draftFormat = "24h";
+  var draftFormat = "24h", draftTheme = "dark";
   var alertQueue = [];
-  var alertOpen = false;
+  var alertOpen = false, alertReturnFocus = null;
   var fmtParts = null;
   var native = (window.ReuzNative && typeof window.ReuzNative.sync === "function") ? window.ReuzNative : null;
   var API = native ? "https://reuz.prakasharuntandon634.workers.dev" : ""; // used for the privacy page link only
@@ -435,7 +449,7 @@ label { display:block; font-size:13px; color:var(--muted); margin:16px 0 6px; }
   function defaults() {
     return { worldZones: ["Europe/London", "America/New_York", "Asia/Tokyo"], timers: [], alarms: [],
       sw: { running: false, startedAt: 0, baseMs: 0, laps: [] },
-      ui: { face: "digital", sound: true, haptics: true, draftTimerMs: 300000, draftAlarm: { h: 7, m: 0 }, draftDays: ALL, draftWake: { challenge: "off", window: 0, gentle: true } } };
+      ui: { face: "digital", sound: true, haptics: true, theme: "dark", draftTimerMs: 300000, draftAlarm: { h: 7, m: 0 }, draftDays: ALL, draftWake: { challenge: "off", window: 0, gentle: true } } };
   }
   function load() {
     var base = defaults();
@@ -456,6 +470,14 @@ label { display:block; font-size:13px; color:var(--muted); margin:16px 0 6px; }
     return base;
   }
   var data = load();
+  function applyTheme(theme) {
+    data.ui.theme = ["dark", "light", "system"].indexOf(theme) >= 0 ? theme : "dark";
+    document.documentElement.setAttribute("data-theme", data.ui.theme);
+    var light = data.ui.theme === "light" || (data.ui.theme === "system" && window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches);
+    document.querySelector('meta[name="theme-color"]').setAttribute("content", light ? "#e7e3db" : "#0b1014");
+  }
+  applyTheme(data.ui.theme);
+  if (window.matchMedia) { var systemTheme = window.matchMedia("(prefers-color-scheme: light)"); if (systemTheme.addEventListener) systemTheme.addEventListener("change", function () { applyTheme(data.ui.theme); }); }
   function save() { try { localStorage.setItem(KEY, JSON.stringify(data)); } catch (e) {} syncNative(); }
 
   // ---------- Native bridge (Android app)
@@ -540,12 +562,22 @@ label { display:block; font-size:13px; color:var(--muted); margin:16px 0 6px; }
   function showAlert(title, body) { alertQueue.push({ title: title, body: body }); if (!alertOpen) nextAlert(); }
   function nextAlert() {
     var a = alertQueue.shift();
-    if (!a) { alertOpen = false; return; }
-    alertOpen = true;
+    if (!a) {
+      alertOpen = false; document.querySelector(".app").inert = !!openLayer;
+      if (openLayer) openLayer.inert = false;
+      overlay.classList.toggle("open", !!openLayer);
+      if (alertReturnFocus && alertReturnFocus.isConnected) alertReturnFocus.focus({ preventScroll: true });
+      alertReturnFocus = null; return;
+    }
+    if (!alertOpen) alertReturnFocus = document.activeElement;
+    alertOpen = true; document.querySelector(".app").inert = true;
+    if (openLayer) openLayer.inert = true;
+    overlay.classList.add("open");
     $("alertTitle").textContent = a.title; $("alertBody").textContent = a.body || "";
-    $("alert").classList.add("open"); beep();
+    $("alert").inert = false; $("alert").removeAttribute("aria-hidden"); $("alert").classList.add("open"); $("alertDismiss").focus(); beep();
   }
-  $("alertDismiss").onclick = function () { $("alert").classList.remove("open"); setTimeout(nextAlert, 420); };
+  $("alert").inert = true; $("alert").setAttribute("aria-hidden", "true");
+  $("alertDismiss").onclick = function () { $("alert").classList.remove("open"); $("alert").inert = true; $("alert").setAttribute("aria-hidden", "true"); setTimeout(nextAlert, 420); };
 
   // ---------- Ripples on anything tappable
   function ripple(el, e) {
@@ -635,18 +667,25 @@ label { display:block; font-size:13px; color:var(--muted); margin:16px 0 6px; }
   function showTab(name) {
     if (TABS.indexOf(name) < 0) return;
     var idx = TABS.indexOf(name);
-    tabs.forEach(function (t) { t.setAttribute("aria-selected", String(t.getAttribute("data-tab") === name)); });
+    tabs.forEach(function (t) { var selected = t.getAttribute("data-tab") === name; t.setAttribute("aria-selected", String(selected)); t.tabIndex = selected ? 0 : -1; });
     document.querySelectorAll(".panel").forEach(function (p) {
       var pi = TABS.indexOf(p.id.slice(2));
       p.style.setProperty("--dx", (pi === idx ? 0 : (pi < idx ? -34 : 34)) + "px");
-      p.classList.toggle("active", pi === idx);
+      p.classList.toggle("active", pi === idx); p.inert = pi !== idx;
     });
     if (name !== currentTab) { tick(1); placeCapsule(name, true); }
     currentTab = name;
     renderAll();
     if (name === "clock" && data.ui.face === "analog") animLoop();
   }
-  tabs.forEach(function (t) { t.onclick = function () { showTab(t.getAttribute("data-tab")); }; });
+  tabs.forEach(function (t, i) {
+    var name = t.getAttribute("data-tab"); t.id = "tab-" + name; t.setAttribute("aria-controls", "p-" + name); t.tabIndex = i === 0 ? 0 : -1;
+    var panel = $("p-" + name); panel.setAttribute("role", "tabpanel"); panel.setAttribute("aria-labelledby", t.id); panel.inert = i !== 0;
+    t.onclick = function () { showTab(name); };
+    t.onkeydown = function (e) { var next = e.key === "ArrowRight" ? (i + 1) % tabs.length : e.key === "ArrowLeft" ? (i + tabs.length - 1) % tabs.length : e.key === "Home" ? 0 : e.key === "End" ? tabs.length - 1 : -1; if (next >= 0) { e.preventDefault(); tabs[next].click(); tabs[next].focus(); } };
+  });
+  $("homeAlarm").onclick = function () { showTab("alarm"); };
+  $("homeTimers").onclick = function () { showTab("timer"); };
   window.addEventListener("resize", function () { placeCapsule(currentTab, false); });
 
   // ---------- Clock tab
@@ -654,7 +693,7 @@ label { display:block; font-size:13px; color:var(--muted); margin:16px 0 6px; }
   var tspans = null, tkey = "";
   function buildTime(h12) {
     var el = $("time"), html = "", i;
-    for (i = 0; i < 8; i++) html += (i === 2 || i === 5) ? '<span class="colon">:</span>' : '<span class="digit">0</span>';
+    for (i = 0; i < 8; i++) html += (i === 2 || i === 5) ? '<span class="colon">:</span>' : '<span class="digit' + (i > 5 ? ' clock-seconds' : '') + '">0</span>';
     if (h12) html += '<span class="ap"></span>';
     el.innerHTML = html;
     tspans = { digits: el.querySelectorAll(".digit"), ap: el.querySelector(".ap"), ready: false };
@@ -695,6 +734,7 @@ label { display:block; font-size:13px; color:var(--muted); margin:16px 0 6px; }
     $("timerNote").textContent = soon === null ? "Nothing ticking" : "Next ends " + inText(soon);
     var frac = (p.h * 3600 + p.m * 60 + p.s) / 86400;
     $("dayfill").style.width = (frac * 100).toFixed(2) + "%";
+    $("dayPercent").textContent = Math.round(frac * 100) + "%";
     $("daynote").textContent = Math.round(frac * 100) + "% of the day is behind you";
   }
 
@@ -721,7 +761,7 @@ label { display:block; font-size:13px; color:var(--muted); margin:16px 0 6px; }
     analog.min = svgEl("g", {}); analog.min.appendChild(svgEl("line", { x1: 150, y1: 160, x2: 150, y2: 58, stroke: "#f4f7ff", "stroke-width": 5, "stroke-linecap": "round" }));
     analog.sec = svgEl("g", {}); analog.sec.appendChild(svgEl("line", { x1: 150, y1: 176, x2: 150, y2: 40, stroke: "url(#abrass)", "stroke-width": 2.2, "stroke-linecap": "round" }));
     svg.appendChild(analog.hour); svg.appendChild(analog.min); svg.appendChild(analog.sec);
-    svg.appendChild(svgEl("circle", { cx: 150, cy: 150, r: 7, fill: "url(#abrass)" })); svg.appendChild(svgEl("circle", { cx: 150, cy: 150, r: 3, fill: "#10142a" }));
+    svg.appendChild(svgEl("circle", { cx: 150, cy: 150, r: 7, fill: "url(#abrass)" })); svg.appendChild(svgEl("circle", { cx: 150, cy: 150, r: 3, fill: "#10171b" }));
     var hint = document.createElement("div"); hint.className = "hint"; hint.textContent = "tap to flip";
     f.appendChild(svg); f.appendChild(hint); analog.built = true;
   }
@@ -764,8 +804,19 @@ label { display:block; font-size:13px; color:var(--muted); margin:16px 0 6px; }
   // ---------- Settings sheet and layers
   var tzSel = $("tz"), tzCustom = $("tzCustom"), statusEl = $("status"), overlay = $("overlay"), openLayer = null;
   ZONES.forEach(function (z) { var o = document.createElement("option"); o.value = z; o.textContent = z; tzSel.appendChild(o); });
-  function openSheet(el) { if (openLayer && openLayer !== el) openLayer.classList.remove("open"); openLayer = el; el.classList.add("open"); overlay.classList.add("open"); }
-  function closeSheet() { if (openLayer) openLayer.classList.remove("open"); openLayer = null; overlay.classList.remove("open"); }
+  var layerReturnFocus = null;
+  document.querySelectorAll(".sheet").forEach(function (el) { el.inert = true; el.setAttribute("aria-hidden", "true"); });
+  function openSheet(el) {
+    if (!openLayer) layerReturnFocus = document.activeElement;
+    if (openLayer && openLayer !== el) { openLayer.classList.remove("open"); openLayer.inert = true; openLayer.setAttribute("aria-hidden", "true"); }
+    openLayer = el; document.querySelector(".app").inert = true; el.inert = false; el.removeAttribute("aria-hidden"); el.classList.add("open"); overlay.classList.add("open");
+    var focus = el.querySelector("input, select, button"); if (focus) focus.focus({ preventScroll: true });
+  }
+  function closeSheet() {
+    if (openLayer) { openLayer.classList.remove("open"); openLayer.inert = true; openLayer.setAttribute("aria-hidden", "true"); }
+    openLayer = null; document.querySelector(".app").inert = alertOpen; overlay.classList.toggle("open", alertOpen);
+    if (layerReturnFocus && layerReturnFocus.isConnected) layerReturnFocus.focus({ preventScroll: true }); layerReturnFocus = null;
+  }
   function setToggle(id, on) { $(id).setAttribute("aria-checked", String(!!on)); }
   function applyHome(s) {
     if (s && validZone(s.timezone)) home.timezone = s.timezone;
@@ -795,12 +846,13 @@ label { display:block; font-size:13px; color:var(--muted); margin:16px 0 6px; }
   function openSettings() {
     var known = ZONES.indexOf(home.timezone) >= 0;
     tzSel.value = known ? home.timezone : ZONES[0]; tzCustom.value = known ? "" : home.timezone;
-    setFormatButtons(home.format); setToggle("optSound", data.ui.sound); setToggle("optHaptics", data.ui.haptics);
+    setFormatButtons(home.format); setThemeButtons(data.ui.theme); setToggle("optSound", data.ui.sound); setToggle("optHaptics", data.ui.haptics);
     statusEl.textContent = ""; statusEl.className = "status"; openSheet($("sheet"));
   }
   function saveHome() {
     var tz = tzCustom.value.trim() || tzSel.value;
     if (!validZone(tz)) { statusEl.textContent = "That timezone isn't recognised."; statusEl.className = "status err"; return; }
+    applyTheme(draftTheme); save();
     if (native) { applyHome({ timezone: tz, format: draftFormat }); statusEl.textContent = "Saved"; setTimeout(closeSheet, 500); return; }
     $("save").disabled = true; statusEl.textContent = "Saving…"; statusEl.className = "status";
     fetch(API + "/api/settings", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ timezone: tz, format: draftFormat }) })
@@ -809,56 +861,107 @@ label { display:block; font-size:13px; color:var(--muted); margin:16px 0 6px; }
       .catch(function () { statusEl.textContent = "Couldn't save. Check your connection."; statusEl.className = "status err"; })
       .then(function () { $("save").disabled = false; });
   }
+  function setThemeButtons(theme) { draftTheme = theme; document.querySelectorAll("[data-theme-choice]").forEach(function (b) { b.setAttribute("aria-pressed", String(b.getAttribute("data-theme-choice") === theme)); }); }
+  document.querySelectorAll("[data-theme-choice]").forEach(function (b) { b.onclick = function () { setThemeButtons(b.getAttribute("data-theme-choice")); }; });
   $("openSettings").onclick = openSettings;
-  overlay.onclick = function () { closeSheet(); };
+  overlay.onclick = function () { if (!alertOpen) closeSheet(); };
   $("cancel").onclick = closeSheet;
   $("save").onclick = saveHome;
   $("optSound").onclick = function () { data.ui.sound = !data.ui.sound; setToggle("optSound", data.ui.sound); save(); tick(1); };
   $("optHaptics").onclick = function () { data.ui.haptics = !data.ui.haptics; setToggle("optHaptics", data.ui.haptics); save(); tick(1); };
   document.querySelectorAll("[data-format]").forEach(function (b) { b.onclick = function () { setFormatButtons(b.getAttribute("data-format")); }; });
-  document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeSheet(); });
+  document.addEventListener("keydown", function (e) {
+    if (alertOpen) { if (e.key === "Tab") { e.preventDefault(); $("alertDismiss").focus(); } return; }
+    if (e.key === "Escape") closeSheet();
+    if (e.key !== "Tab" || !openLayer) return;
+    var focusable = Array.prototype.filter.call(openLayer.querySelectorAll("button, input, select, [tabindex]"), function (el) { return !el.disabled && el.tabIndex >= 0 && el.getClientRects().length; });
+    if (!focusable.length) return;
+    var first = focusable[0], last = focusable[focusable.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  });
 
   // ---------- World clocks
-  var worldSel = $("worldSel");
-  ZONES.forEach(function (z) { var o = document.createElement("option"); o.value = z; o.textContent = z; worldSel.appendChild(o); });
+  var worldSel = $("worldSel"), cityZones = ZONES.slice();
+  try { if (Intl.supportedValuesOf) cityZones = Intl.supportedValuesOf("timeZone"); } catch (e) {}
+  ZONES.forEach(function (z) { if (cityZones.indexOf(z) < 0) cityZones.push(z); }); cityZones.sort();
+  function cityName(z) { return z.split("/").pop().split("_").join(" "); }
+  cityZones.forEach(function (z) { var o = document.createElement("option"); o.value = z; o.textContent = cityName(z) + " · " + z; worldSel.appendChild(o); });
+  worldSel.value = "Asia/Tokyo";
   function offsetText(diff) {
     if (diff === 0) return "Same time as home";
     var a = Math.abs(diff), h = Math.floor(a / 60), m = a % 60, s = (h ? h + "h" : "") + (m ? (h ? " " : "") + m + "m" : "");
     return s + (diff > 0 ? " ahead" : " behind");
   }
+  function worldEntries() {
+    var out = [{ zone: home.timezone, key: "home", local: true }];
+    data.worldZones.forEach(function (z, i) { if (z !== home.timezone) out.push({ zone: z, key: String(i), local: false }); }); return out;
+  }
+  function miniClock(key) {
+    var html = '<svg class="world-dial" viewBox="0 0 100 100" aria-hidden="true"><circle class="world-bezel" cx="50" cy="50" r="47"/><circle class="world-disc" cx="50" cy="50" r="43"/>';
+    for (var j = 0; j < 12; j++) { var a = j * Math.PI / 6; html += '<line x1="' + (50 + 36 * Math.sin(a)) + '" y1="' + (50 - 36 * Math.cos(a)) + '" x2="' + (50 + 40 * Math.sin(a)) + '" y2="' + (50 - 40 * Math.cos(a)) + '" stroke="#ad9878" stroke-width="1"/>'; }
+    html += '<text x="50" y="23" text-anchor="middle" fill="#b4bec4" font-size="8">12</text><text x="79" y="53" text-anchor="middle" fill="#b4bec4" font-size="8">3</text><text x="50" y="82" text-anchor="middle" fill="#b4bec4" font-size="8">6</text><text x="21" y="53" text-anchor="middle" fill="#b4bec4" font-size="8">9</text>';
+    html += '<line data-wh="' + key + '" x1="50" y1="53" x2="50" y2="29" stroke="#ffe0a8" stroke-width="3" stroke-linecap="round"/><line data-wm="' + key + '" x1="50" y1="55" x2="50" y2="17" stroke="#ffae45" stroke-width="2" stroke-linecap="round"/><circle cx="50" cy="50" r="3" fill="#ffb44d"/></svg>'; return html;
+  }
+  function filterWorld() {
+    var query = $("worldSearch").value.trim().toLowerCase(), visible = 0;
+    document.querySelectorAll(".world-card").forEach(function (el) { el.hidden = el.getAttribute("data-zone").toLowerCase().split("_").join(" ").indexOf(query) < 0; if (!el.hidden) visible++; });
+    $("worldNoMatch").hidden = visible > 0;
+  }
   function renderWorld() {
-    var list = $("worldList");
-    if (!data.worldZones.length) { list.innerHTML = '<div class="empty">No cities yet.<br>Add one and I will keep its clock wound.</div>'; return; }
     var html = "";
-    data.worldZones.forEach(function (z, i) {
-      html += '<div class="row tap"><div class="glyph" data-wg="' + i + '"></div><div class="main"><div class="title">' + esc(z.replace("_", " ")) + '</div><div class="meta" data-wday="' + i + '"></div></div>'
-        + '<div class="right" data-wtime="' + i + '"></div>'
-        + '<button class="iconbtn danger" data-wdel="' + i + '" aria-label="Remove ' + esc(z) + '">✕</button></div>';
+    worldEntries().forEach(function (entry) {
+      var z = entry.zone, i = entry.key;
+      html += '<article class="row glass world-card" data-zone="' + esc(z) + '"><div class="world-copy main"><div class="title">' + esc(cityName(z)) + '</div><div class="world-zone">' + esc(z) + '</div><div class="world-time" data-wtime="' + i + '"></div><div class="meta" data-wday="' + i + '"></div><div class="world-offset"><span data-wg="' + i + '"></span> <span data-woff="' + i + '"></span></div></div>' + miniClock(i)
+        + (entry.local ? '<span class="local-badge">HOME</span>' : '<button class="iconbtn danger world-remove" data-wdel="' + i + '" aria-label="Remove ' + esc(z) + '">×</button>') + '</article>';
     });
-    list.innerHTML = html; tickWorld();
+    $("worldList").innerHTML = html; tickWorld(); filterWorld();
   }
   function tickWorld() {
     var d = new Date(), homeOff = 0;
     try { homeOff = offsetMin(home.timezone, d); } catch (e) {}
-    data.worldZones.forEach(function (z, i) {
-      var t = document.querySelector('[data-wtime="' + i + '"]'), day = document.querySelector('[data-wday="' + i + '"]'), gl = document.querySelector('[data-wg="' + i + '"]');
+    worldEntries().forEach(function (entry) {
+      var z = entry.zone, i = entry.key;
+      var t = document.querySelector('[data-wtime="' + i + '"]'), day = document.querySelector('[data-wday="' + i + '"]'), gl = document.querySelector('[data-wg="' + i + '"]'), offset = document.querySelector('[data-woff="' + i + '"]');
       if (!t || !day) return;
       t.textContent = F(z, "time").format(d);
       var off = 0; try { off = offsetMin(z, d); } catch (e) {}
-      day.textContent = F(z, "day").format(d) + " · " + offsetText(off - homeOff);
-      var hr = Number(F(z, "hour").format(d));
+      day.textContent = F(z, "day").format(d);
+      if (offset) offset.textContent = entry.local ? "Local time" : offsetText(off - homeOff);
+      var p = partsIn(F(z, "off"), d), hr = p.h;
       if (gl) gl.textContent = (hr >= 6 && hr < 18) ? "☀" : "☾";
+      var hour = document.querySelector('[data-wh="' + i + '"]'), minute = document.querySelector('[data-wm="' + i + '"]');
+      if (hour) hour.setAttribute("transform", "rotate(" + ((hr % 12) * 30 + p.m / 2) + " 50 50)");
+      if (minute) minute.setAttribute("transform", "rotate(" + (p.m * 6) + " 50 50)");
     });
   }
+  function addCity(z) {
+    if (!validZone(z)) { $("cityStatus").textContent = "Choose a city below or enter a valid IANA time zone."; return; }
+    if (z === home.timezone || data.worldZones.indexOf(z) >= 0) { closeSheet(); toast(cityName(z) + " is already on your clock."); return; }
+    data.worldZones.push(z); $("worldCustom").value = ""; $("worldSearch").value = ""; tick(1); save(); renderWorld(); closeSheet(); toast(cityName(z) + " added.");
+  }
+  function cityMatches() {
+    var q = $("worldCustom").value.trim().toLowerCase().split("_").join(" ");
+    return cityZones.filter(function (z) { return z.toLowerCase().split("_").join(" ").indexOf(q) >= 0; });
+  }
+  function renderCityResults() {
+    $("cityStatus").textContent = "";
+    var query = $("worldCustom").value.trim(), matches = cityMatches().slice(0, 6);
+    $("cityResults").innerHTML = query ? (matches.length ? matches.map(function (z) { return '<button type="button" class="city-result" data-addzone="' + esc(z) + '"><span><b>' + esc(cityName(z)) + '</b><small>' + esc(z) + '</small></span><span class="city-result-plus" aria-hidden="true">+</span></button>'; }).join("") : '<div class="empty">No matching city. You can enter an IANA time zone.</div>') : "";
+  }
+  $("worldSearch").oninput = filterWorld;
+  $("openCitySheet").onclick = function () { $("worldCustom").value = ""; renderCityResults(); openSheet($("citySheet")); };
+  $("cityCancel").onclick = closeSheet;
+  $("worldCustom").oninput = renderCityResults;
+  $("worldCustom").onkeydown = function (e) { if (e.key === "Enter") { e.preventDefault(); $("worldAdd").click(); } };
+  $("cityResults").onclick = function (e) { var b = e.target.closest("[data-addzone]"); if (b) addCity(b.getAttribute("data-addzone")); };
   $("worldAdd").onclick = function () {
-    var z = $("worldCustom").value.trim() || worldSel.value;
-    if (!validZone(z)) { toast("I don't know that timezone. Try Africa/Nairobi."); return; }
-    if (data.worldZones.indexOf(z) < 0) data.worldZones.push(z);
-    $("worldCustom").value = ""; tick(1); save(); renderWorld();
+    var typed = $("worldCustom").value.trim(), matches = cityMatches();
+    var exact = cityZones.filter(function (z) { return cityName(z).toLowerCase() === typed.toLowerCase(); });
+    var z = !typed ? worldSel.value : validZone(typed) ? typed : exact.length === 1 ? exact[0] : matches.length === 1 ? matches[0] : ""; addCity(z);
   };
   $("worldList").onclick = function (e) {
-    var b = e.target.closest("[data-wdel]");
-    if (!b) return;
+    var b = e.target.closest("[data-wdel]"); if (!b) return;
     data.worldZones.splice(Number(b.getAttribute("data-wdel")), 1); save(); renderWorld();
   };
 
@@ -867,10 +970,25 @@ label { display:block; font-size:13px; color:var(--muted); margin:16px 0 6px; }
     var s = Math.ceil(ms / 1000), h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), sec = s % 60;
     return h > 0 ? h + ":" + pad(m) + ":" + pad(sec) : pad(m) + ":" + pad(sec);
   }
-  function renderDraftTimer() { $("timerNew").textContent = fmtHMS(data.ui.draftTimerMs); }
+  function buildInstrument(id, numbers) {
+    var svg = $(id);
+    for (var i = 0; i < 60; i++) {
+      var a = i * Math.PI / 30, major = i % 5 === 0, r = major ? 127 : 133;
+      svg.appendChild(svgEl("line", { x1: 150 + r * Math.sin(a), y1: 150 - r * Math.cos(a), x2: 150 + 140 * Math.sin(a), y2: 150 - 140 * Math.cos(a), stroke: major ? "#bca784" : "#657078", "stroke-width": major ? 2 : 1, "stroke-linecap": "round" }));
+      if (numbers && major) { var t = svgEl("text", { x: 150 + 111 * Math.sin(a), y: 150 - 111 * Math.cos(a), fill: "#d3d9dc", "font-size": 13, "text-anchor": "middle", "dominant-baseline": "central" }); t.textContent = String(i); svg.appendChild(t); }
+    }
+    if (numbers) { var marker = svgEl("g", { id: "timerMarker" }); marker.appendChild(svgEl("circle", { cx: 150, cy: 20, r: 9, fill: "#ffaf43", stroke: "#ffe1a2", "stroke-width": 2 })); svg.appendChild(marker); }
+  }
+  buildInstrument("timerTicks", true); buildInstrument("stopTicks", false);
+  function renderDraftTimer() {
+    $("timerNew").textContent = fmtHMS(data.ui.draftTimerMs);
+    $("timerUnit").textContent = data.ui.draftTimerMs >= 3600000 ? "HOURS / MIN / SEC" : "MIN / SEC";
+    $("timerMarker").setAttribute("transform", "rotate(" + ((data.ui.draftTimerMs / 60000) % 60 * 6) + " 150 150)");
+    document.querySelectorAll("#timerPresets .chip").forEach(function (b) { var on = Number(b.getAttribute("data-minutes")) * 60000 === data.ui.draftTimerMs; b.classList.toggle("on", on); b.setAttribute("aria-pressed", String(on)); });
+  }
   [1, 5, 10, 25].forEach(function (m) {
     var c = document.createElement("button");
-    c.className = "chip tap"; c.textContent = m + " min";
+    c.className = "chip tap"; c.textContent = m + " min"; c.setAttribute("data-minutes", String(m));
     c.onclick = function () { data.ui.draftTimerMs = m * 60000; tick(1); save(); renderDraftTimer(); };
     $("timerPresets").appendChild(c);
   });
@@ -914,6 +1032,8 @@ label { display:block; font-size:13px; color:var(--muted); margin:16px 0 6px; }
     openDial({ kind: "timer", title: "Set timer", vals: [Math.floor(s / 3600), Math.floor((s % 3600) / 60), s % 60], field: 1, done: "Use this time",
       onDone: function (v) { data.ui.draftTimerMs = (v[0] * 3600 + v[1] * 60 + v[2]) * 1000; save(); renderDraftTimer(); } });
   };
+  $("timerSpin").onclick = function () { $("timerDraft").click(); };
+  $("timerRotary").onclick = function () { $("timerDraft").click(); setMode("rotary"); };
   $("timerAdd").onclick = function () {
     var ms = data.ui.draftTimerMs;
     if (!(ms >= 1000)) { toast("Dial in a time first."); return; }

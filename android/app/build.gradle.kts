@@ -11,7 +11,7 @@ android {
         minSdk = 26
         targetSdk = 36
         versionCode = 10 + (System.getenv("GITHUB_RUN_NUMBER")?.toIntOrNull() ?: 0)
-        versionName = "1.0.0"
+        versionName = "1.1.0"
     }
 
     // CI supplies a fixed key (from repository secrets) so newer APKs install over older ones.

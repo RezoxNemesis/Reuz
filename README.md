@@ -33,3 +33,22 @@ npx wrangler dev --local
 # open http://127.0.0.1:8787/setup, then:
 BASE=http://127.0.0.1:8787 MCP_TOKEN=<token from /setup> scripts/smoke.sh
 ```
+
+
+## Reuz 1.1 interface
+
+![Reuz 1.1 interface, captured from the running app page](docs/reuz-1.1-preview.jpg)
+
+The Android app and web clock share a charcoal, glass and amber interface: an open digital clock that flips to analog, detailed timer and stopwatch dials, city cards with live clock hands, and matching alarm and settings sheets. Appearance can be Dark, Light, or System and is saved on the device. Existing alarms, focus sessions, purchases and widgets keep their data.
+
+The skin lives in `src/atelier.css.js`; `src/page.js` supplies the shared markup and behavior. `scripts/export-page.mjs` embeds both into the offline Android asset.
+
+### Interface verification
+
+Run `npm test` for clock/settings regressions. For mobile layout and interaction checks, install Playwright in a temporary directory, install its Chromium browser, then run:
+
+```
+NODE_PATH=/path/to/playwright/node_modules OUT=/tmp/reuz-previews node scripts/atelier-check.cjs
+```
+
+The check serves its own local fixture and covers 360px and 390px phones, landscape, navigation, city search, timers, stopwatch laps, alarms, settings and appearance persistence. The Android workflow runs these checks before building the APK and uploads the resulting interface previews.

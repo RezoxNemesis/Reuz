@@ -5,7 +5,7 @@ const OUT = process.env.OUT || '/tmp';
 const results = [];
 const check = (name, ok, extra) => results.push({ name, ok: !!ok, extra });
 (async () => {
-  const b = await chromium.launch();
+  const b = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH });
   const ctx = await b.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2 });
   await ctx.addInitScript(() => {
     window.__synced = []; window.__bought = []; window.__pro = false;
